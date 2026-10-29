@@ -280,6 +280,7 @@ class Site(object):
             "FOOTER_PAGE_LINKS": self.footer_page_links(),
             "FOOTER_CONTACT": self.footer_contact(),
             "JSON_LD": "",
+            "SEO_TAGS": "",
         }
 
     def page(self, tpl_name, mapping):
@@ -288,8 +289,51 @@ class Site(object):
         return render(load_template(tpl_name), values)
 
     def og_default(self):
+        """Anh chia se mac dinh: anh trong Cai dat website, chua co thi lay anh bia bai moi nhat."""
         img = self.website.get("og_image") or ""
-        return esc(absolute(self.domain, img)) if img else ""
+        if not img and self.posts:
+            img = (self.posts[0].get("cover") or {}).get("lg", "")
+        return absolute(self.domain, img) if img else ""
+
+    def seo_tags(self, title, description, image="", image_size=None, extra=None):
+        """Khoi the SEO bo sung chen sau <link rel=canonical> moi trang (placeholder {{SEO_TAGS}}):
+        og:locale, og:image (+ kich thuoc that), Twitter/X card, RSS, apple-touch-icon."""
+        w = self.website
+        lang = w.get("lang", "en")
+        tags = ['    <meta property="og:locale" content="%s">' % {"en": "en_US", "vi": "vi_VN"}.get(lang, esc(lang))]
+        if image:
+            tags.append('    <meta property="og:image" content="%s">' % esc(image))
+            if image_size:
+                tags.append('    <meta property="og:image:width" content="%d">' % image_size[0])
+                tags.append('    <meta property="og:image:height" content="%d">' % image_size[1])
+            tags.append('    <meta property="og:image:alt" content="%s">' % esc(title))
+        tags.append('    <meta name="twitter:card" content="%s">' % ("summary_large_image" if image else "summary"))
+        tags.append('    <meta name="twitter:title" content="%s">' % esc(title))
+        tags.append('    <meta name="twitter:description" content="%s">' % esc(description))
+        if image:
+            tags.append('    <meta name="twitter:image" content="%s">' % esc(image))
+        tags += extra or []
+        tags.append('    <link rel="alternate" type="application/rss+xml" title="%s" href="%sfeed.xml">' % (esc(w["site_name"]), esc(self.domain)))
+        tags.append('    <link rel="apple-touch-icon" href="%s">' % esc(asset_url(w.get("favicon")) or "/assets/favicon.svg"))
+        return "\n".join(tags)
+
+    def og_size(self, url):
+        """Kich thuoc that cua anh chia se: anh bia bai 1200x800, anh mac dinh 1200x630."""
+        if not url:
+            return None
+        if "/cover-" in url or "/cover." in url:
+            return (1200, 800)
+        if (self.website.get("og_image") or "x").split("?")[0] in url:
+            return (1200, 630)
+        return None
+
+    def publisher_ld(self):
+        w = self.website
+        org = {"@type": "Organization", "name": w["site_name"], "url": self.domain}
+        logo = w.get("logo") or w.get("favicon")
+        if logo:
+            org["logo"] = {"@type": "ImageObject", "url": absolute(self.domain, logo)}
+        return org
 
     def nav(self, mobile):
         items = [(url_of(c["slug"]), c["name"]) for c in self.categories]
@@ -590,17 +634,21 @@ def build_home(site):
     for i in range(0, len(blocks), 2):
         rows.append('      <div class="categories">\n%s\n      </div>' % "\n\n".join(blocks[i:i + 2]))
 
-    ld = json_ld({
+    home_title = w["site_name"] + (" - " + w["tagline"] if w.get("tagline") else "")
+    og = site.og_default()
+    publisher = site.publisher_ld()
+    ld = "\n".join([json_ld(dict({"@context": "https://schema.org"}, **publisher)), json_ld({
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": w["site_name"],
         "url": site.domain,
         "description": w.get("description", ""),
         "inLanguage": w.get("lang", "en"),
-    })
+        "publisher": {"@type": "Organization", "name": w["site_name"]},
+    })])
     write_page("", site.page("home.html", {
-        "HOME_TITLE": esc(w["site_name"] + (" - " + w["tagline"] if w.get("tagline") else "")),
-        "OG_IMAGE": site.og_default(),
+        "HOME_TITLE": esc(home_title),
+        "SEO_TAGS": site.seo_tags(home_title, w.get("description", ""), og, site.og_size(og)),
         "JSON_LD": ld,
         "EMPTY_STATE": empty,
         "COL_1": "\n".join(home_col1_card(p) for p in ordered[0:1]),
@@ -616,13 +664,31 @@ def build_category(site, cat):
     cat_posts = [p for p in site.posts if p.get("category") == cat["slug"]]
     main_posts = "\n".join(main_post_a(p) for p in cat_posts[8:12])
     tail_posts = "\n".join(main_post_b(p) for p in cat_posts[18:])
-    og = absolute(site.domain, (cat_posts[0].get("cover") or {}).get("lg", "")) if cat_posts else ""
+    og = absolute(site.domain, (cat_posts[0].get("cover") or {}).get("lg", "")) if cat_posts else site.og_default()
+    desc = cat.get("description") or ("Stories in %s on %s." % (cat["name"], site.website["site_name"]))
+    cat_url = site.domain + cat["slug"] + "/"
+    collection = json_ld({
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": cat["name"],
+        "description": desc,
+        "url": cat_url,
+        "inLanguage": site.website.get("lang", "en"),
+        "isPartOf": {"@type": "WebSite", "name": site.website["site_name"], "url": site.domain},
+        "mainEntity": {
+            "@type": "ItemList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": i + 1, "url": site.domain + p["slug"] + "/", "name": p["title"]}
+                for i, p in enumerate(cat_posts[:30])
+            ],
+        },
+    })
     write_page(cat["slug"], site.page("category.html", {
         "CATEGORY_NAME": esc(cat["name"]),
         "CATEGORY_URL": cat["slug"] + "/",
-        "CATEGORY_DESCRIPTION": esc(cat.get("description") or ("Stories in %s on %s." % (cat["name"], site.website["site_name"]))),
-        "OG_IMAGE": esc(og) or site.og_default(),
-        "JSON_LD": breadcrumb_ld(site, [("Home", site.domain), (cat["name"], site.domain + cat["slug"] + "/")]),
+        "CATEGORY_DESCRIPTION": esc(desc),
+        "SEO_TAGS": site.seo_tags(cat["name"] + " | " + site.website["site_name"], desc, og, site.og_size(og)),
+        "JSON_LD": collection + "\n" + breadcrumb_ld(site, [("Home", site.domain), (cat["name"], cat_url)]),
         "FEATURED_COL_1": "\n".join(cat_featured_col1(p) for p in cat_posts[0:1]),
         "FEATURED_COL_2": "\n\n".join(cat_featured_col2(p) for p in cat_posts[1:3]),
         "FEATURED_COL_3": "\n".join(cat_featured_col3(p) for p in cat_posts[3:8]),
@@ -652,18 +718,31 @@ def build_post(site, post):
     featured = [p for p in suggestions(site, post["slug"], 10) if p["slug"] not in related_slugs][:3]
     og = absolute(site.domain, (post.get("cover") or {}).get("lg", ""))
 
+    published = date_iso(post.get("date"))
+    modified = date_iso(post.get("updated_at") or post.get("date"))
+    article_meta = [
+        '    <meta property="article:published_time" content="%s">' % esc(published),
+        '    <meta property="article:modified_time" content="%s">' % esc(modified),
+        '    <meta property="article:section" content="%s">' % esc(cat["name"]),
+        '    <meta property="article:author" content="%s">' % esc(author),
+    ]
+    words = len(re.sub(r"<[^>]+>", " ", post.get("content_html", "")).split())
     ld = "\n".join([json_ld({
         "@context": "https://schema.org",
-        "@type": "NewsArticle",
+        "@type": "BlogPosting",
         "mainEntityOfPage": {"@type": "WebPage", "@id": canonical},
-        "headline": post["title"],
+        "url": canonical,
+        "headline": post["title"][:110],
         "description": post.get("description", ""),
         "keywords": ", ".join(tags),
+        "articleSection": cat["name"],
+        "wordCount": words,
+        "inLanguage": w.get("lang", "en"),
         "image": {"@type": "ImageObject", "url": og, "width": 1200, "height": 800} if og else None,
-        "datePublished": date_iso(post.get("date")),
-        "dateModified": date_iso(post.get("updated_at") or post.get("date")),
+        "datePublished": published,
+        "dateModified": modified,
         "author": {"@type": "Person", "name": author},
-        "publisher": {"@type": "Organization", "name": w["site_name"]},
+        "publisher": site.publisher_ld(),
     }), breadcrumb_ld(site, [("Home", site.domain), (cat["name"], site.domain + (cat["slug"] + "/" if cat["slug"] else "")),
                              (post["title"], canonical)])])
     write_page(post["slug"], site.page("post.html", {
@@ -671,7 +750,7 @@ def build_post(site, post):
         "DESCRIPTION": esc(post.get("description", "")),
         "KEYWORDS": esc(", ".join(tags)),
         "AUTHOR": esc(author),
-        "OG_IMAGE": esc(og),
+        "SEO_TAGS": site.seo_tags(post["title"], post.get("description", ""), og, (1200, 800) if og else None, article_meta),
         "POST_URL": post["slug"] + "/",
         "ARTICLE_TAGS": "\n".join('    <meta property="article:tag" content="%s">' % esc(t) for t in tags),
         "CATEGORY_NAME": esc(cat["name"]),
@@ -689,12 +768,25 @@ def build_page(site, page):
     w = site.website
     canonical = site.domain + page["slug"] + "/"
     author = w.get("author_default") or w["site_name"]
+    desc = page.get("description") or w.get("description", "")
+    og = site.og_default()
+    webpage = json_ld({
+        "@context": "https://schema.org",
+        "@type": {"about": "AboutPage", "contact": "ContactPage", "contact-us": "ContactPage"}.get(page["slug"], "WebPage"),
+        "name": page["title"],
+        "description": desc,
+        "url": canonical,
+        "inLanguage": w.get("lang", "en"),
+        "dateModified": date_iso(page.get("updated_at")) or None,
+        "isPartOf": {"@type": "WebSite", "name": w["site_name"], "url": site.domain},
+        "publisher": site.publisher_ld(),
+    })
     write_page(page["slug"], site.page("page.html", {
         "PAGE_TITLE": esc(page["title"]),
-        "PAGE_DESCRIPTION": esc(page.get("description") or w.get("description", "")),
+        "PAGE_DESCRIPTION": esc(desc),
         "PAGE_URL": page["slug"] + "/",
-        "OG_IMAGE": site.og_default(),
-        "JSON_LD": breadcrumb_ld(site, [("Home", site.domain), (page["title"], canonical)]),
+        "SEO_TAGS": site.seo_tags(page["title"] + " | " + w["site_name"], desc, og, site.og_size(og)),
+        "JSON_LD": webpage + "\n" + breadcrumb_ld(site, [("Home", site.domain), (page["title"], canonical)]),
         "CONTENT": prepare_content(page.get("content_html", "")),
         "FEATURED_ITEMS": "\n".join(featured_item(p, p.get("author") or author) for p in suggestions(site, "", 3)),
     }))
@@ -707,7 +799,27 @@ def build_404(site):
     (OUT / "404.html").write_text(site.page("404.html", {
         "CATEGORY_PILLS": pills,
         "CONTACT_URL": url_of(contact["slug"]) if contact else "/",
+        "SEO_TAGS": "",
     }), encoding="utf-8")
+
+
+def cms_url():
+    """URL /exec cua he thong quan tri - khai DUY NHAT trong static/admin/config.js."""
+    cfg = STATIC / "admin" / "config.js"
+    m = re.search(r"DANDAN_CMS_URL\s*=\s*['\"]([^'\"]+)['\"]", cfg.read_text(encoding="utf-8")) if cfg.exists() else None
+    return m.group(1) if m else ""
+
+
+def build_admin_api(site):
+    """Trang huong dan API cho AI: html/admin/api/index.html (GAS.md muc XI). Dia chi API ghi
+    THANG vao HTML (khong dien bang JS) de AI tai trang ve doc la thay ngay."""
+    api_url = cms_url()
+    if not api_url:
+        print("WARN: static/admin/config.js chua co DANDAN_CMS_URL - trang /admin/api/ thieu dia chi API")
+    values = site.common()
+    values.update({"API_URL": esc(api_url) or "&lt;API URL&gt;", "SITE_URL": esc(site.domain)})
+    html = render(load_template("admin-api.html"), values).replace("__KEY__", "&lt;KEY&gt;")
+    write_page("admin/api", html)
 
 
 def build_sitemap(site):
@@ -796,6 +908,7 @@ def main():
         build_page(site, page)
     build_home(site)
     build_404(site)
+    build_admin_api(site)
     build_sitemap(site)
     build_feed(site)
     build_misc(site)

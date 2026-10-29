@@ -28,7 +28,8 @@ Website công khai hoàn toàn tiếng Anh; trang quản trị vẫn tiếng Vi�
 | Thư mục / file | Vai trò | Ai sửa |
 |---|---|---|
 | `templates/*.html` | Giao diện = giao diện TrithucWorld (HTML + CSS + JS inline, placeholder `{{TOKEN}}`), chữ tiếng Anh | Dev, sửa tay |
-| `static/admin/index.html` | Trang `/admin/` nhúng CMS (biến `CMS_URL`) | Dev, 1 lần sau deploy CMS |
+| `static/admin/index.html`, `static/admin/config.js` | Trang `/admin/` nhúng CMS; địa chỉ `/exec` khai DUY NHẤT trong `config.js` | Dev, 1 lần sau deploy CMS |
+| `templates/admin-api.html` | Trang hướng dẫn API cho AI `/admin/api/` | Dev — sửa cùng lúc với `gas/Api.js` |
 | `static/vendor/tinymce/` | Trình soạn thảo tự host (TinyMCE 6.8.5) | Không cần đụng |
 | `static/images/**` | Ảnh bài viết/trang/site | CMS tự ghi |
 | `data/*.json`, `data/posts/*.json` | Nội dung | CMS tự ghi — **không sửa tay** |
@@ -107,7 +108,7 @@ node scripts/test_gas_e2e.mjs       # chạy trọn luồng server CMS trên d�
 5. Chọn hàm `setup` › Run 1 lần trong editor: Google hỏi cấp quyền (Mail, Sheets, gọi URL ngoài),
    rồi tự tạo Sheet Users + kiểm tra đọc được repo (xem Execution log, phải ra "Đọc repo OK").
 6. **Deploy › New deployment › Web app**: Execute as *Me*, Who has access *Anyone*. Copy URL `/exec`.
-7. Dán URL đó vào biến `CMS_URL` trong `static/admin/index.html`, commit + push.
+7. Dán URL đó vào `static/admin/config.js` (`window.DANDAN_CMS_URL`), commit + push.
 
    URL đang dùng (deploy 30/10/2026 — sửa CMS thì deploy **New version**, URL này không đổi):
    `https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec`
@@ -126,6 +127,8 @@ từ nội dung `app.html` + `js.html`, cache cũ trên máy người dùng tự
 3. **Trang tĩnh**: Giới thiệu, Liên hệ, Chính sách bảo mật...
 4. **Bài viết**: tiêu đề → ảnh bìa → nội dung (nút ảnh trên thanh công cụ để chèn ảnh) → Lưu.
 5. **Người dùng**: thêm email biên tập viên (`editor`) hoặc quản trị (`admin`).
+6. **Kết nối AI** (tuỳ chọn): tạo khoá → "Chép lệnh cho AI" → dán vào Claude/ChatGPT trên máy,
+   AI tự đọc `https://dandanstories.com/admin/api/` rồi đăng bài (nội dung tiếng Anh). Xem `GAS.md` mục XI.
 
 Mỗi lần Lưu/Xoá, website tự build lại và cập nhật sau ~1-2 phút.
 

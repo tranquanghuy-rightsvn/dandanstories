@@ -10,7 +10,7 @@
 <meta name="referrer" content="no-referrer">
 <link rel="icon" href="/assets/favicon.svg">
 <!-- Admin panel embedded on the site domain. If it does not load within 12 seconds, an
-     "Mở ở tab riêng" button appears. Change the panel address in CMS_URL below. -->
+     "Mở ở tab riêng" button appears. The panel address lives in /admin/config.js. -->
 <style>
   html, body { height: 100%; margin: 0; overflow: hidden; background: #f5f6f8;
                font-family: "Open Sans", "Segoe UI", sans-serif; color: #1c1c1c; }
@@ -60,11 +60,12 @@
 </div>
 
 <div class="cms-viewport">
-  <iframe class="cms-frame" id="cms-frame" title="Trang quản trị" referrerpolicy="no-referrer"></iframe>
+  <iframe class="cms-frame" id="cms-frame" title="Trang quản trị" referrerpolicy="no-referrer" allow="clipboard-write"></iframe>
 </div>
 
+<script src="/admin/config.js"></script>
 <script>
-  var CMS_URL = 'https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec'; // admin panel URL (see README.md)
+  var CMS_URL = window.DANDAN_CMS_URL || '';
 
   var frame = document.getElementById('cms-frame');
   var statusBox = document.getElementById('cms-status');

@@ -14,7 +14,8 @@ Website công khai **hoàn toàn tiếng Anh** (độc giả quốc tế): giao 
 Trang quản trị (CMS) vẫn tiếng Việt cho người vận hành. Nội dung viết bằng tiếng Anh → slug tự
 sinh từ tiêu đề cũng là tiếng Anh.
 
-CMS quản lý ĐÚNG 5 mục: Bài viết, Danh mục, Trang tĩnh, Cài đặt website, Người dùng.
+CMS quản lý ĐÚNG 6 mục: Bài viết, Danh mục, Trang tĩnh, Cài đặt website, Người dùng, Kết nối AI
+(mục XI).
 Site 100% tĩnh — không có form công khai, không bình luận, không tài khoản người đọc.
 Website dựng được TỪ ĐẦU hoàn toàn qua CMS: repo khởi đầu với dữ liệu rỗng, build vẫn chạy và
 trang chủ hiện trạng thái "đang chuẩn bị nội dung" cho tới khi có bài đầu tiên.
@@ -31,6 +32,7 @@ trang chủ hiện trạng thái "đang chuẩn bị nội dung" cho tới khi c
    | Bài viết, Trang tĩnh, Danh mục (thêm/sửa/xoá) | ✔ | ✔ | ✔ |
    | Cài đặt website | | ✔ | ✔ |
    | Người dùng (chỉ thêm/sửa/xoá admin + editor) | | ✔ | ✔ |
+   | Kết nối AI (tạo/thu hồi khoá API) | | ✔ | ✔ |
    Dòng `root` chỉ sửa tay trong Sheet. Không tự sửa/xoá chính mình qua CMS.
 5. OTP sống 10 phút, cooldown 60 giây/email, sai 5 lần phải xin mã mới. Token sống 30 ngày,
    lưu `localStorage`. `verifyOtp` dọn token hết hạn (`purgeExpiredTokens_`), Đăng xuất thu hồi
@@ -155,3 +157,53 @@ tự động qua hook khi sửa `gas/*.html`) và `node scripts/test_gas_e2e.mjs
 - `SPREADSHEET_ID` — KHÔNG cần điền, code tự tạo lần đầu.
 - `SITE_URL` — tuỳ chọn, vd `https://dandanstories.com/`. Có thì trình soạn thảo tải từ
   `<SITE_URL>vendor/tinymce/` (tự host); chưa có site thì để trống → dùng bản CDN cùng phiên bản 6.8.5.
+
+## XI. API cho công cụ AI (khoá kết nối) — theo mẫu dolphinhouse.vn
+
+Mục đích: chủ website ra lệnh cho công cụ AI chạy trên máy họ (Claude, ChatGPT...) để nó tự đăng
+bài viết / trang tĩnh / danh mục / ảnh, không cần mở Admin.
+
+1. **Khoá kết nối** `dds_` + 64 hex, lưu Script Property `apikey_<khoá>` = JSON
+   `{label, email, created_at, last_used_at, calls}`. Tối đa **10** khoá. Chỉ admin/root tạo/xem/thu
+   hồi (`createApiKey`, `listApiKeys`, `revokeApiKey`, tab **Kết nối AI**). Thu hồi = xoá property,
+   khoá chết ngay. Khoá KHÔNG lưu localStorage.
+2. **Khoá luôn quyền `editor`** (chỉ nội dung): `whoAmI_()` nhận diện khoá theo tiền tố trước khi tra
+   token phiên → mọi thao tác ghi đi qua đúng hàm Admin đang dùng (`savePost`, `savePage`,
+   `saveCategory`, `uploadPostCover`, `uploadContentImage`, `delete*`). Khoá KHÔNG mở được giao diện
+   quản trị (`boot()` từ chối), không đụng được Cài đặt website / Người dùng / khoá khác.
+3. **Cổng vào**: cùng URL `/exec`. `doGet` có `?action=` → API (chỉ lệnh đọc `API_READ_ACTIONS`);
+   `doPost` (JSON body) → API. Phản hồi luôn `{ok, action, data|error}` (HTTP luôn 200), lỗi viết
+   tiếng Anh (người đọc là AI). Code ở file riêng `gas/Api.js`.
+4. **Lệnh**: `ping`; `post.list|get|create|update|delete`; `category.list|create|update|delete`;
+   `page.list|get|create|update|delete`; `image.upload`.
+   - `create` từ chối slug đã có, `update` từ chối slug chưa có (không upsert ngầm). `update` trộn
+     với bản cũ: field không gửi giữ nguyên.
+   - Bài mới bắt buộc `title`, `category` (đã tồn tại), `cover`.
+   - HTML từ API được lọc (`apiCleanHtml_`: bỏ script/style/iframe/form, `on*=`, `javascript:`,
+     `<h1>` → `<h2>`). Ảnh `<img src="http...">`/`data:` trong nội dung tự tải về kho ảnh của
+     bài/trang (tối đa 15 ảnh mới/lệnh).
+5. **Ảnh**: URL http(s) (server tự tải), `{data: base64, filename}`, hoặc đường dẫn đã có. Chỉ
+   JPEG/PNG/WebP, ≤ 5MB. Server KHÔNG resize được → ảnh bìa qua API dùng chung 1 file cho cỡ lớn/nhỏ;
+   tài liệu yêu cầu AI gửi ảnh ngang 3:2.
+6. **Khoá ghi advisory** (`api_write_lock` trong CacheService, chờ tối đa 45s, TTL 180s) — 2 lệnh ghi
+   song song sẽ đọc-ghi đè index của nhau.
+7. **Trang hướng dẫn** `/admin/api/` = `templates/admin-api.html`, build.py sinh ra (địa chỉ API ghi
+   thẳng vào HTML để AI tải trang là đọc được). Đây là TÀI LIỆU DUY NHẤT cho AI — sửa action/field
+   trong `gas/Api.js` thì sửa luôn trang này. Trang không chứa khoá; quy định nội dung phải viết
+   **tiếng Anh**. "Chép lệnh cho AI" trong Admin (`buildAiPrompt_` ở `js.html`) chỉ gồm: đường dẫn
+   trang hướng dẫn + địa chỉ + khoá + nhắc tiếng Anh (giống mục 11 của trang hướng dẫn).
+8. Địa chỉ `/exec` khai **đúng 1 chỗ**: `static/admin/config.js` (`window.DANDAN_CMS_URL`), dùng cho
+   cả `/admin/` lẫn trang hướng dẫn.
+9. **Kiểm thử**: `node scripts/test_gas_e2e.mjs` có nhóm "API cho AI".
+
+## XII. SEO trên site
+
+Mọi trang (trừ 404 - `noindex, follow`) có: `<title>`, meta description, `<link rel=canonical>`,
+robots `index, follow, max-image-preview:large`, Open Graph (`og:type/title/description/url/locale/
+image` + kích thước thật), Twitter/X card, link RSS, `apple-touch-icon`. Khối thêm sinh bởi
+`Site.seo_tags()` (placeholder `{{SEO_TAGS}}`). JSON-LD: trang chủ `Organization` + `WebSite`; danh
+mục `CollectionPage` (ItemList) + `BreadcrumbList`; bài viết `BlogPosting` + `BreadcrumbList` +
+`article:published_time/modified_time/section/author`; trang tĩnh `WebPage`/`AboutPage`/
+`ContactPage` + `BreadcrumbList`. Ảnh chia sẻ: ảnh bìa bài; trang khác dùng "Ảnh chia sẻ mặc định"
+trong Cài đặt, chưa có thì ảnh bìa bài mới nhất.
+

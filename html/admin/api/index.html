@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="referrer" content="no-referrer">
+<title>Hướng dẫn API cho AI - DanDan Stories</title>
+<link rel="icon" href="/assets/favicon.svg">
+<!-- Trang hướng dẫn API (GAS.md mục XI) - build.py sinh ra từ templates/admin-api.html.
+     Đây là TÀI LIỆU DUY NHẤT cho công cụ AI: đổi action/field trong gas/Api.js thì sửa luôn trang này.
+     Trang không chứa khoá. Địa chỉ API lấy từ static/admin/config.js lúc build. -->
+<style>
+  :root { --red: #c00; --ink: #1f2937; --muted: #6b7280; --line: #e5e7eb; --bg: #f6f7f8; --code: #111827; --mono: ui-monospace, Menlo, Consolas, monospace; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+  a { color: #0b63ce; }
+  code { font-family: var(--mono); font-size: 13px; background: #fff; border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
+  header.top { background: #fff; border-bottom: 1px solid var(--line); }
+  header.top .wrap { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 18px 20px; }
+  header.top h1 { margin: 0; font-size: 20px; }
+  header.top h1 span { color: var(--red); }
+  header.top p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+  .spacer { flex: 1; }
+  .wrap { max-width: 1120px; margin: 0 auto; }
+  .layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 26px; align-items: start; padding: 26px 20px 60px; }
+  nav.toc { position: sticky; top: 16px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+  nav.toc a { display: block; padding: 6px 8px; border-radius: 6px; color: var(--ink); text-decoration: none; font-size: 14px; }
+  nav.toc a:hover { background: var(--bg); }
+  section.card { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 22px 24px; margin-bottom: 18px; }
+  section.card h2 { margin: 0 0 8px; font-size: 18px; }
+  section.card h3 { margin: 20px 0 6px; font-size: 15px; }
+  pre { background: var(--code); color: #e5e7eb; border-radius: 8px; padding: 14px 16px; overflow-x: auto; font: 12.5px/1.6 var(--mono); margin: 10px 0; white-space: pre; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--bg); font-size: 12px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); }
+  td code { white-space: nowrap; }
+  .req { color: var(--red); font-weight: 700; }
+  .callout { border-left: 3px solid var(--red); background: #fff6f6; padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+  .callout.info { border-left-color: #0b63ce; background: #f2f7ff; }
+  .btn { display: inline-block; border: 1px solid var(--line); background: #fff; color: var(--ink); padding: 8px 14px; border-radius: 8px; font: 600 14px system-ui, sans-serif; text-decoration: none; cursor: pointer; }
+  .btn-primary { background: var(--red); border-color: var(--red); color: #fff; }
+  .key-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 8px 0; }
+  .key-row input { flex: 1 1 320px; font: 13px var(--mono); padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; }
+  ol li, ul li { margin: 4px 0; }
+  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } nav.toc { position: static; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div>
+      <h1><span>DanDan Stories</span> — Hướng dẫn API cho AI</h1>
+      <p>Tài liệu để công cụ AI (Claude, ChatGPT...) tự đăng nội dung lên website. Trang không hiển thị với độc giả.</p>
+    </div>
+    <div class="spacer"></div>
+    <a class="btn" href="/admin/">← Trang quản trị</a>
+  </div>
+</header>
+
+<div class="layout wrap">
+  <nav class="toc">
+    <a href="#tom-tat">0. Tóm tắt cho AI</a>
+    <a href="#bat-dau">1. Bắt đầu</a>
+    <a href="#cach-goi">2. Cách gọi</a>
+    <a href="#actions">3. Danh sách lệnh</a>
+    <a href="#bai-viet">4. Bài viết</a>
+    <a href="#anh">5. Ảnh</a>
+    <a href="#danh-muc">6. Danh mục</a>
+    <a href="#trang-tinh">7. Trang tĩnh</a>
+    <a href="#quy-tac">8. Quy tắc nội dung</a>
+    <a href="#quy-trinh">9. Quy trình mẫu</a>
+    <a href="#loi">10. Lỗi thường gặp</a>
+    <a href="#prompt">11. Lệnh dán cho AI</a>
+  </nav>
+
+  <main>
+    <section class="card" id="tom-tat">
+      <h2>0. Tóm tắt cho AI (đọc phần này trước)</h2>
+      <pre>WEBSITE:   https://dandanstories.com/   (DanDan Stories - English-language story blog for a worldwide audience)
+API URL:   https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec
+AUTH:      every request carries "key" (connection key given to you by the site owner; starts with "dds_")
+WRITE:     POST JSON body {"key": "...", "action": "...", ...fields}   (curl: always use -L)
+READ:      GET  https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec?action=post.list&amp;key=...   (read-only actions only)
+RESPONSE:  {"ok": true, "action": "...", "data": {...}}  or  {"ok": false, "action": "...", "error": "..."}
+           HTTP status is always 200 - ALWAYS check "ok" before assuming success.
+LANGUAGE:  ALL published content MUST be in English (titles, descriptions, body, category names,
+           slugs, image alt text) - even when the owner talks to you in Vietnamese.
+FLOW:      ping -> category.list -> (category.create) -> post.create -> post.get to verify
+           -> tell the owner the URL (live after 1-2 minutes).
+RULES:     one write call at a time (no parallel writes); slugs are permanent; never invent facts.</pre>
+    </section>
+
+    <section class="card" id="bat-dau">
+      <h2>1. Bắt đầu (dành cho chủ website)</h2>
+      <ol>
+        <li>Mở <a href="/admin/">trang quản trị</a> → mục <strong>Kết nối AI</strong> (chỉ admin thấy) → đặt tên khoá → <strong>+ Tạo khoá mới</strong>.</li>
+        <li>Bấm <strong>Chép lệnh cho AI</strong> rồi dán vào ô chat của công cụ AI trên máy bạn (Claude Code, Claude Desktop, ChatGPT có chạy lệnh...).</li>
+        <li>Nói việc cần làm, ví dụ: <em>"Viết 1 bài khoảng 800 chữ về chuyến tàu đêm Hà Nội - Huế, đưa vào danh mục Journeys, ảnh bìa lấy từ link ..."</em>.</li>
+      </ol>
+      <div class="key-row">
+        <input id="key-input" placeholder="(tuỳ chọn) dán khoá vào đây để mọi ví dụ trong trang tự điền khoá - chỉ lưu trong trình duyệt" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="callout"><strong>Khoá ghi được nội dung lên website.</strong> Chỉ dán vào công cụ chạy trên máy bạn, không đăng lên mạng. Lộ khoá thì vào Kết nối AI bấm <strong>Thu hồi</strong>. Khoá chỉ có quyền nội dung (bài viết, danh mục, trang tĩnh, ảnh), không đổi được Cài đặt website hay Người dùng.</div>
+    </section>
+
+    <section class="card" id="cach-goi">
+      <h2>2. Cách gọi</h2>
+      <p>Mọi lệnh gửi tới <strong>cùng 1 địa chỉ</strong>, thân là JSON, luôn có <code>key</code> và <code>action</code>. Cờ <code>-L</code> là bắt buộc (máy chủ chuyển hướng 1 lần trước khi trả kết quả).</p>
+      <pre data-tpl>curl -sL -X POST "https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec" \
+  -H "Content-Type: application/json" \
+  -d '{"key":"&lt;KEY&gt;","action":"ping"}'</pre>
+      <p>Lệnh chỉ đọc gọi được bằng GET (tham số trên URL):</p>
+      <pre data-tpl>curl -sL "https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec?action=post.list&amp;key=&lt;KEY&gt;&amp;q=train&amp;limit=5"</pre>
+      <p>Kết quả luôn là 1 trong 2 dạng (HTTP luôn 200 — phải đọc <code>ok</code>):</p>
+      <pre>{"ok":true,"action":"ping","data":{ ... }}
+{"ok":false,"action":"post.create","error":"Category \"journey\" does not exist. Call category.list, or category.create first."}</pre>
+      <div class="callout info">Dữ liệu được ghi ngay khi lệnh trả <code>ok:true</code>; website cần <strong>1–2 phút</strong> để hiện thay đổi. Gọi lệnh ghi <strong>tuần tự</strong>, không chạy song song.</div>
+    </section>
+
+    <section class="card" id="actions">
+      <h2>3. Danh sách lệnh</h2>
+      <table>
+        <thead><tr><th style="width:190px">action</th><th>Việc</th><th style="width:90px">Gọi bằng</th></tr></thead>
+        <tbody>
+          <tr><td><code>ping</code></td><td>Kiểm tra khoá, xem thông tin site + danh sách lệnh</td><td>GET/POST</td></tr>
+          <tr><td><code>post.list</code></td><td>Danh sách bài (không kèm nội dung). Lọc: <code>q</code>, <code>category</code>, <code>draft</code>, <code>limit</code> (≤200), <code>offset</code></td><td>GET/POST</td></tr>
+          <tr><td><code>post.get</code></td><td>1 bài đầy đủ kèm <code>content_html</code> — <code>slug</code></td><td>GET/POST</td></tr>
+          <tr><td><code>post.create</code></td><td>Tạo bài mới</td><td>POST</td></tr>
+          <tr><td><code>post.update</code></td><td>Sửa bài — chỉ gửi field cần đổi</td><td>POST</td></tr>
+          <tr><td><code>post.delete</code></td><td>Xoá bài + toàn bộ ảnh của bài — <code>slug</code></td><td>POST</td></tr>
+          <tr><td><code>category.list</code></td><td>Danh mục hiện có</td><td>GET/POST</td></tr>
+          <tr><td><code>category.create</code> / <code>category.update</code> / <code>category.delete</code></td><td>Quản lý danh mục (xoá bị chặn nếu còn bài)</td><td>POST</td></tr>
+          <tr><td><code>page.list</code> / <code>page.get</code></td><td>Trang tĩnh (About, Contact, Privacy Policy...)</td><td>GET/POST</td></tr>
+          <tr><td><code>page.create</code> / <code>page.update</code> / <code>page.delete</code></td><td>Quản lý trang tĩnh</td><td>POST</td></tr>
+          <tr><td><code>image.upload</code></td><td>Tải 1 ảnh lên, trả về <code>path</code> để chèn vào nội dung</td><td>POST</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card" id="bai-viet">
+      <h2>4. Bài viết</h2>
+      <table>
+        <thead><tr><th style="width:170px">Field</th><th>Ý nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td><code>title</code> <span class="req">*</span></td><td>Tiêu đề (tiếng Anh), 40–70 ký tự là đẹp.</td></tr>
+          <tr><td><code>slug</code></td><td>Đường dẫn → URL <code>https://dandanstories.com/&lt;slug&gt;/</code>. Bỏ trống thì tự sinh từ tiêu đề (chữ thường, gạch ngang). <strong>Không đổi được sau khi tạo.</strong></td></tr>
+          <tr><td><code>category</code> <span class="req">*</span></td><td>Slug danh mục <strong>đã có</strong> (gọi <code>category.list</code>).</td></tr>
+          <tr><td><code>description</code></td><td>Mô tả ngắn 120–160 ký tự, chữ thuần. Hiện dưới thẻ bài + làm meta description.</td></tr>
+          <tr><td><code>keywords</code></td><td>Từ khoá: chuỗi phân cách dấu phẩy hoặc mảng — <code>"night train, slow travel"</code>.</td></tr>
+          <tr><td><code>author</code></td><td>Tên tác giả. Bỏ trống = tác giả mặc định của website.</td></tr>
+          <tr><td><code>cover</code> <span class="req">*</span> (khi tạo)</td><td>Ảnh bìa: URL ảnh <code>https://…</code> hoặc <code>{"data":"&lt;base64&gt;","filename":"cover.jpg"}</code>. <strong>Ảnh ngang tỉ lệ 3:2</strong> (~1200×800), JPEG/PNG/WebP, ≤ 5MB. Xem mục 5.</td></tr>
+          <tr><td><code>content_html</code></td><td>Nội dung bài, HTML (xem mục 8 các thẻ được dùng). Ảnh <code>&lt;img src="https://…"&gt;</code> trong nội dung được <strong>tự tải về</strong> website.</td></tr>
+          <tr><td><code>featured</code></td><td><code>true</code> = ưu tiên lên ô lớn đầu trang chủ.</td></tr>
+          <tr><td><code>draft</code></td><td><code>true</code> = lưu nháp, <strong>chưa</strong> hiện trên website (chủ website duyệt rồi bỏ nháp trong Admin hoặc <code>post.update</code> với <code>"draft": false</code>).</td></tr>
+        </tbody>
+      </table>
+      <h3>Tạo bài</h3>
+      <pre data-tpl>curl -sL -X POST "https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "key": "&lt;KEY&gt;",
+    "action": "post.create",
+    "title": "The Night Train to Hue",
+    "category": "journeys",
+    "description": "Thirteen hours on a sleeper train taught me how to sit still and watch the lit windows drift past.",
+    "keywords": ["night train", "Vietnam", "slow travel"],
+    "cover": "https://example.com/photos/night-train.jpg",
+    "content_html": "&lt;p&gt;The train left Hanoi at seven...&lt;/p&gt;&lt;h2&gt;Strangers in the dining car&lt;/h2&gt;&lt;p&gt;...&lt;/p&gt;&lt;figure&gt;&lt;img src=\"https://example.com/photos/dining-car.jpg\" alt=\"The dining car at midnight\"&gt;&lt;figcaption&gt;The dining car at midnight&lt;/figcaption&gt;&lt;/figure&gt;"
+  }'</pre>
+      <p>Trả về <code>data.record</code> (bản ghi đã lưu, có <code>url</code>) và <code>data.note</code>.</p>
+      <h3>Sửa bài — chỉ gửi field cần đổi</h3>
+      <pre data-tpl>curl -sL -X POST "https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec" -H "Content-Type: application/json" \
+  -d '{"key":"&lt;KEY&gt;","action":"post.update","slug":"the-night-train-to-hue","description":"New description...","featured":true}'</pre>
+      <p>Field không gửi giữ nguyên. Gửi <code>content_html</code> là thay toàn bộ nội dung — muốn sửa 1 đoạn thì <code>post.get</code> lấy nội dung hiện tại, sửa đúng đoạn đó, rồi gửi lại cả bài.</p>
+      <h3>Xem / tìm / xoá</h3>
+      <pre data-tpl>curl -sL "https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec?action=post.list&amp;key=&lt;KEY&gt;&amp;q=night%20train"
+curl -sL "https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec?action=post.get&amp;key=&lt;KEY&gt;&amp;slug=the-night-train-to-hue"
+curl -sL -X POST "https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec" -H "Content-Type: application/json" \
+  -d '{"key":"&lt;KEY&gt;","action":"post.delete","slug":"the-night-train-to-hue"}'</pre>
+    </section>
+
+    <section class="card" id="anh">
+      <h2>5. Ảnh</h2>
+      <table>
+        <thead><tr><th style="width:250px">Cách gửi</th><th>Dùng khi</th></tr></thead>
+        <tbody>
+          <tr><td><code>"https://…/photo.jpg"</code></td><td>Ảnh có địa chỉ công khai — website tự tải về lưu lại.</td></tr>
+          <tr><td><code>{"data":"&lt;base64&gt;","filename":"photo.jpg"}</code></td><td>Ảnh nằm trên máy. Nén trước (cạnh dài ~1600px).</td></tr>
+          <tr><td><code>"/images/posts/&lt;slug&gt;/…"</code></td><td>Ảnh đã có trên website (giữ nguyên).</td></tr>
+        </tbody>
+      </table>
+      <p>Chỉ nhận JPEG, PNG, WebP; tối đa <strong>5MB</strong>/ảnh, tối đa 15 ảnh mới trong 1 lệnh. Website không tự cắt ảnh bìa gửi qua API — hãy gửi ảnh ngang <strong>3:2</strong>.</p>
+      <h3>Tải ảnh riêng (ảnh nằm trên máy) rồi chèn vào nội dung</h3>
+      <pre data-tpl>curl -sL -X POST "https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec" -H "Content-Type: application/json" \
+  -d "{\"key\":\"&lt;KEY&gt;\",\"action\":\"image.upload\",\"kind\":\"post\",\"slug\":\"the-night-train-to-hue\",\"filename\":\"window.jpg\",\"data\":\"$(base64 -i ./window.jpg | tr -d '\n')\"}"
+# -> {"ok":true,"data":{"path":"/images/posts/the-night-train-to-hue/content-3.jpg","url":"..."}}
+# dùng trong content_html: &lt;figure&gt;&lt;img src="/images/posts/the-night-train-to-hue/content-3.jpg" alt="..."&gt;&lt;figcaption&gt;...&lt;/figcaption&gt;&lt;/figure&gt;</pre>
+      <p><code>kind</code>: <code>post</code> hoặc <code>page</code>; <code>slug</code>: bài/trang mà ảnh thuộc về (với bài mới chưa tạo, dùng đúng slug sẽ tạo).</p>
+    </section>
+
+    <section class="card" id="danh-muc">
+      <h2>6. Danh mục</h2>
+      <p>Luôn xem danh mục hiện có trước, chỉ tạo mới khi thật sự không có danh mục phù hợp. Danh mục hiện trên menu chính và trang chủ (thứ tự theo <code>order</code>, nhỏ trước).</p>
+      <pre data-tpl>curl -sL "https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec?action=category.list&amp;key=&lt;KEY&gt;"
+curl -sL -X POST "https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec" -H "Content-Type: application/json" \
+  -d '{"key":"&lt;KEY&gt;","action":"category.create","name":"Short Fiction","description":"Short stories - ten minutes to read, a long time to remember.","order":4}'
+curl -sL -X POST "https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec" -H "Content-Type: application/json" \
+  -d '{"key":"&lt;KEY&gt;","action":"category.update","slug":"short-fiction","description":"..."}'</pre>
+      <p>Field: <code>name</code> <span class="req">*</span>, <code>slug</code> (tự sinh, không đổi được), <code>description</code>, <code>order</code>. <code>category.delete</code> bị từ chối nếu danh mục còn bài viết.</p>
+    </section>
+
+    <section class="card" id="trang-tinh">
+      <h2>7. Trang tĩnh</h2>
+      <p>Trang như About, Contact, Privacy Policy, Terms. Luôn hiện ở chân trang; <code>show_in_menu: true</code> để thêm vào menu chính.</p>
+      <pre data-tpl>curl -sL -X POST "https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec" -H "Content-Type: application/json" \
+  -d '{"key":"&lt;KEY&gt;","action":"page.create","title":"Privacy Policy","description":"How we handle reader information.","order":3,"content_html":"&lt;p&gt;...&lt;/p&gt;"}'
+curl -sL "https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec?action=page.get&amp;key=&lt;KEY&gt;&amp;slug=privacy-policy"</pre>
+      <p>Field: <code>title</code> <span class="req">*</span>, <code>slug</code>, <code>description</code>, <code>order</code>, <code>show_in_menu</code>, <code>content_html</code>. <code>page.update</code> chỉ gửi field cần đổi.</p>
+    </section>
+
+    <section class="card" id="quy-tac">
+      <h2>8. Quy tắc nội dung (bắt buộc)</h2>
+      <ol>
+        <li><strong>Tiếng Anh</strong> cho mọi thứ hiển thị: tiêu đề, mô tả, nội dung, tên danh mục, alt/chú thích ảnh, slug. Văn phong tự nhiên của người bản ngữ, đúng chính tả.</li>
+        <li>Website là blog kể chuyện: giọng văn ấm áp, chân thật, có cảm xúc; đoạn ngắn 2–4 câu, dễ đọc trên điện thoại.</li>
+        <li><code>content_html</code> chỉ dùng: <code>&lt;p&gt; &lt;h2&gt; &lt;h3&gt; &lt;h4&gt; &lt;strong&gt; &lt;em&gt; &lt;u&gt; &lt;a href&gt; &lt;ul&gt; &lt;ol&gt; &lt;li&gt; &lt;blockquote&gt; &lt;figure&gt; &lt;img&gt; &lt;figcaption&gt; &lt;table&gt; &lt;hr&gt;</code>. <strong>Không</strong> dùng <code>&lt;h1&gt;</code> (tiêu đề bài đã là H1), không script/style/iframe/form, không thuộc tính <code>style</code> hay <code>class</code> tự đặt (bị lọc bỏ).</li>
+        <li>Ảnh trong nội dung bọc <code>&lt;figure&gt;&lt;img src alt&gt;&lt;figcaption&gt;…&lt;/figcaption&gt;&lt;/figure&gt;</code>, luôn có <code>alt</code> mô tả ảnh.</li>
+        <li>Mỗi bài nên có 2–5 tiêu đề <code>&lt;h2&gt;</code>; <code>description</code> 120–160 ký tự, không lặp nguyên tiêu đề.</li>
+        <li>Không bịa sự kiện, số liệu, trích dẫn của người thật. Truyện hư cấu thì đưa vào danh mục dành cho fiction (nếu có).</li>
+        <li>Chỉ dùng ảnh bạn được phép dùng (ảnh chủ website đưa, ảnh có giấy phép sử dụng tự do). Không lấy ảnh có bản quyền.</li>
+        <li>Không đặt <code>draft</code> nếu chủ website không yêu cầu; khi chưa chắc nội dung thì hỏi lại hoặc lưu nháp (<code>"draft": true</code>) và báo cho chủ website.</li>
+      </ol>
+    </section>
+
+    <section class="card" id="quy-trinh">
+      <h2>9. Quy trình mẫu cho AI</h2>
+      <ol>
+        <li><code>ping</code> — xác nhận khoá còn hiệu lực.</li>
+        <li><code>category.list</code> — chọn danh mục phù hợp; không có thì <code>category.create</code> (hỏi chủ website nếu không chắc).</li>
+        <li><code>post.list</code> với <code>q</code> — tránh viết trùng chủ đề bài đã có.</li>
+        <li>Soạn bài theo mục 8. Ảnh trên máy → <code>image.upload</code> trước; ảnh có URL công khai → đặt thẳng vào <code>cover</code> / <code>&lt;img src&gt;</code>.</li>
+        <li><code>post.create</code> — đọc <code>ok</code>; lỗi thì đọc <code>error</code>, sửa tham số, gọi lại.</li>
+        <li><code>post.get</code> — kiểm tra lại bài đã lưu.</li>
+        <li>Báo chủ website: tiêu đề, URL (<code>data.record.url</code>), nhắc website cập nhật sau 1–2 phút.</li>
+      </ol>
+      <p>Nhiều bài: lặp lại bước 4–6 <strong>tuần tự</strong> từng bài.</p>
+    </section>
+
+    <section class="card" id="loi">
+      <h2>10. Lỗi thường gặp</h2>
+      <table>
+        <thead><tr><th style="width:44%">error</th><th>Xử lý</th></tr></thead>
+        <tbody>
+          <tr><td>Invalid or revoked connection key</td><td>Khoá sai hoặc đã thu hồi — xin khoá mới từ chủ website.</td></tr>
+          <tr><td>Unknown action "…"</td><td>Sai tên lệnh — gọi <code>ping</code> xem danh sách.</td></tr>
+          <tr><td>… must be called with POST</td><td>Lệnh ghi không chạy qua GET.</td></tr>
+          <tr><td>Post "…" already exists</td><td>Dùng <code>post.update</code>, hoặc đặt <code>slug</code> khác.</td></tr>
+          <tr><td>Category "…" does not exist</td><td>Gọi <code>category.list</code> lấy đúng slug, hoặc tạo trước.</td></tr>
+          <tr><td>Đường dẫn /…/ đã được dùng bởi …</td><td>Slug trùng 1 bài/danh mục/trang khác — đặt <code>slug</code> khác.</td></tr>
+          <tr><td>Missing "cover"</td><td>Bài mới bắt buộc có ảnh bìa.</td></tr>
+          <tr><td>Image … larger than 5MB / Unsupported image type</td><td>Nén ảnh, đổi sang JPEG/PNG/WebP.</td></tr>
+          <tr><td>Another write is in progress</td><td>Đợi vài giây rồi gọi lại; không chạy lệnh ghi song song.</td></tr>
+          <tr><td>Nhận về trang HTML thay vì JSON</td><td>Thiếu cờ <code>-L</code> trong curl.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card" id="prompt">
+      <h2>11. Lệnh dán cho AI</h2>
+      <p>Trong trang quản trị, mục <strong>Kết nối AI</strong> có nút <strong>Chép lệnh cho AI</strong> (đã điền sẵn khoá). Nội dung tương tự:</p>
+      <pre data-tpl>Bạn được phép đăng nội dung lên website DanDan Stories (https://dandanstories.com/) qua API JSON.
+
+BƯỚC 1 - ĐỌC TOÀN BỘ hướng dẫn API tại: https://dandanstories.com/admin/api/
+         Làm đúng theo hướng dẫn đó (cách gọi, field, quy tắc nội dung, quy trình).
+
+ĐỊA CHỈ API: https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec
+KHOÁ: &lt;KEY&gt;
+
+Kiểm tra kết nối:
+curl -sL "https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec?action=ping&amp;key=&lt;KEY&gt;"
+
+Lưu ý: website dành cho độc giả nói tiếng Anh - mọi nội dung đăng lên (tiêu đề, mô tả, nội dung, tên danh mục, đường dẫn) PHẢI viết bằng tiếng Anh, dù tôi ra lệnh bằng tiếng Việt.
+Không chia sẻ khoá này ra ngoài máy của tôi.</pre>
+    </section>
+  </main>
+</div>
+<script>
+(function () {
+  // Dán khoá để ví dụ tự điền - khoá chỉ nằm trong trình duyệt (sessionStorage), không gửi đi đâu.
+  var input = document.getElementById("key-input");
+  var blocks = [].slice.call(document.querySelectorAll("pre[data-tpl]"));
+  blocks.forEach(function (pre) { pre.setAttribute("data-raw", pre.textContent); });
+  function render() {
+    var key = input.value.trim() || "<KEY>";
+    blocks.forEach(function (pre) { pre.textContent = pre.getAttribute("data-raw").split("<KEY>").join(key); });
+  }
+  try { input.value = sessionStorage.getItem("dds_api_key") || ""; } catch (e) {}
+  input.addEventListener("input", function () {
+    try { sessionStorage.setItem("dds_api_key", input.value.trim()); } catch (e) {}
+    render();
+  });
+  render();
+})();
+</script>
+</body>
+</html>

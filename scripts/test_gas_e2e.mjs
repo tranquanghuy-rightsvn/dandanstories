@@ -29,8 +29,21 @@ const repo = new Map(); // path -> Buffer
 let commits = 0;
 const shaOf = (buf) => crypto.createHash("sha1").update(buf).digest("hex");
 
+// Ảnh "trên mạng" cho API tải về (https://img.example/<tên>.<ext>).
+const remoteImages = { "cover.jpg": "image/jpeg", "inline.png": "image/png", "anim.gif": "image/gif" };
+
 function ghFetch(url, opts = {}) {
   const u = new URL(url);
+  if (u.hostname === "img.example") {
+    const name = u.pathname.slice(1);
+    const type = remoteImages[name];
+    const body = Buffer.from("remote-" + name);
+    return {
+      getResponseCode: () => (type ? 200 : 404),
+      getContentText: () => "",
+      getBlob: () => ({ getContentType: () => type, getBytes: () => toSigned(body) }),
+    };
+  }
   const m = u.pathname.match(/^\/repos\/o\/r\/contents\/(.*)$/);
   const res = (code, body) => ({ getResponseCode: () => code, getContentText: () => JSON.stringify(body) });
   if (!m) return res(404, { message: "not found" });
@@ -127,6 +140,7 @@ const ctx = {
   Session: { getEffectiveUser: () => ({ getEmail: () => OWNER }), getScriptTimeZone: () => "Asia/Ho_Chi_Minh" },
   MailApp: { sendEmail: (m) => mails.push(m), getRemainingDailyQuota: () => 100 },
   Logger: { log() {} },
+  ScriptApp: { getService: () => ({ getUrl: () => "https://script.google.com/macros/s/TEST/exec" }) },
   UrlFetchApp: { fetch: ghFetch },
   HtmlService: {
     createTemplateFromFile: (n) => ({ evaluate: () => ({ getContent: () => readGas(n) }) }),
@@ -156,6 +170,7 @@ const ctx = {
 };
 vm.createContext(ctx);
 vm.runInContext(readFileSync(join(ROOT, "gas/Code.js"), "utf8"), ctx, { filename: "gas/Code.js" });
+vm.runInContext(readFileSync(join(ROOT, "gas/Api.js"), "utf8"), ctx, { filename: "gas/Api.js" });
 const call = (fn, ...args) => ctx[fn](...args);
 const throws = (fn, re, ...args) => assert.throws(() => call(fn, ...args), re, fn + " phải báo lỗi " + re);
 const img = (ext) => "data:image/" + ext + ";base64," + Buffer.from("fake-" + ext + "-" + Math.random()).toString("base64");
@@ -241,10 +256,66 @@ call("deletePost", edToken, "ban-nhap");
 assert.ok(![...repo.keys()].some((k) => k.startsWith("static/images/posts/ban-nhap/")), "ảnh bài đã xoá phải bị xoá");
 call("deletePage", edToken, "lien-he");
 
+// 7b. API cho AI (GAS.md mục XI).
+throws("createApiKey", /Không đủ quyền/, edToken, "x");
+const { key: apiKey } = call("createApiKey", token, "Máy ở nhà");
+assert.match(apiKey, /^dds_[0-9a-f]{64}$/);
+assert.equal(call("boot", apiKey).me.role, null, "khoá không mở được giao diện quản trị");
+throws("saveWebsite", /Không đủ quyền/, apiKey, { site_name: "x" });
+const api = (payload, method = "POST") => call("handleApi_", payload, method);
+assert.equal(api({ action: "ping" }).ok, false);
+assert.match(api({ action: "ping", key: "dds_sai" }).error, /Invalid or revoked/);
+assert.match(api({ action: "nope", key: apiKey }).error, /Unknown action/);
+const ping = api({ action: "ping", key: apiKey }, "GET");
+assert.equal(ping.ok, true);
+assert.equal(ping.data.guide, "https://dandanstories.com/admin/api/");
+assert.match(api({ action: "post.create", key: apiKey, title: "X" }, "GET").error, /must be called with POST/);
+assert.match(api({ action: "post.create", key: apiKey, title: "A Night Train", category: "nope", cover: "https://img.example/cover.jpg" }).error, /Category "nope" does not exist/);
+assert.match(api({ action: "post.create", key: apiKey, title: "A Night Train", category: "hanh-trinh" }).error, /Missing "cover"/);
+assert.match(api({ action: "post.create", key: apiKey, title: "Gif", category: "hanh-trinh", cover: "https://img.example/anim.gif" }).error, /Use JPEG, PNG or WebP/);
+const created = api({
+  action: "post.create", key: apiKey, title: "A Night Train to Hue", category: "hanh-trinh",
+  description: "Thirteen hours on a sleeper train.", keywords: ["night train", "slow travel"],
+  cover: "https://img.example/cover.jpg",
+  content_html: '<h1>Big</h1><p onclick="x()">Hello</p><script>alert(1)</script><figure><img src="https://img.example/inline.png" alt="Window"><figcaption>Window</figcaption></figure>',
+});
+assert.equal(created.ok, true, created.error);
+const rec = created.data.record;
+assert.equal(rec.slug, "a-night-train-to-hue");
+assert.equal(rec.url, "https://dandanstories.com/a-night-train-to-hue/");
+assert.equal(rec.keywords, "night train, slow travel");
+assert.match(rec.cover.lg, /^images\/posts\/a-night-train-to-hue\/cover-lg\.jpg/);
+const got = api({ action: "post.get", key: apiKey, slug: rec.slug }, "GET").data;
+assert.ok(!/script|onclick|<h1/i.test(got.content_html), "HTML từ API phải được lọc: " + got.content_html);
+assert.ok(got.content_html.includes('src="/images/posts/a-night-train-to-hue/content-1.png"'), "ảnh ngoài phải được tải về: " + got.content_html);
+assert.match(api({ action: "post.create", key: apiKey, title: "A Night Train to Hue", category: "hanh-trinh", cover: "https://img.example/cover.jpg" }).error, /already exists/);
+const upd = api({ action: "post.update", key: apiKey, slug: rec.slug, featured: true });
+assert.equal(upd.ok, true, upd.error);
+assert.equal(upd.data.record.featured, true);
+assert.equal(upd.data.record.title, "A Night Train to Hue", "field không gửi phải giữ nguyên");
+assert.equal(api({ action: "post.get", key: apiKey, slug: rec.slug }).data.content_html, got.content_html, "update không gửi content giữ nguyên nội dung");
+assert.equal(api({ action: "post.list", key: apiKey, q: "night train" }, "GET").data.total, 1);
+const up = api({ action: "image.upload", key: apiKey, kind: "post", slug: rec.slug, data: Buffer.from("x").toString("base64"), filename: "a.webp" });
+assert.equal(up.data.path, "/images/posts/a-night-train-to-hue/content-2.webp");
+const cat = api({ action: "category.create", key: apiKey, name: "Short Fiction", order: 9 });
+assert.equal(cat.data.record.slug, "short-fiction");
+assert.equal(api({ action: "category.update", key: apiKey, slug: "short-fiction", description: "Tiny tales" }).data.record.description, "Tiny tales");
+const pg = api({ action: "page.create", key: apiKey, title: "Privacy Policy", content_html: "<p>We keep nothing.</p>" });
+assert.equal(pg.ok, true, pg.error);
+assert.equal(api({ action: "page.get", key: apiKey, slug: "privacy-policy" }).data.content_html, "<p>We keep nothing.</p>");
+assert.equal(api({ action: "page.update", key: apiKey, slug: "privacy-policy", show_in_menu: true }).data.record.show_in_menu, true);
+assert.equal(api({ action: "post.delete", key: apiKey, slug: rec.slug }).ok, true);
+assert.ok(![...repo.keys()].some((k) => k.startsWith("static/images/posts/a-night-train-to-hue/")), "xoá bài qua API phải xoá ảnh");
+assert.equal(api({ action: "category.delete", key: apiKey, slug: "short-fiction" }).ok, true);
+assert.equal(call("listApiKeys", token)[0].calls > 5, true);
+call("revokeApiKey", token, apiKey);
+assert.match(api({ action: "ping", key: apiKey }).error, /Invalid or revoked/);
+assert.equal(call("boot", token).apiUrl, "https://script.google.com/macros/s/TEST/exec");
+
 // 8. Boot trả đủ dữ liệu.
 const b = call("boot", token);
 assert.equal(b.posts.length, 1);
-assert.equal(b.pages.length, 1);
+assert.equal(b.pages.length, 2);
 assert.equal(b.categories.length, 2);
 assert.ok(b.appHtml.includes("tab-post-editor"));
 assert.equal(call("logout", token).ok, true);
@@ -259,7 +330,7 @@ try {
     writeFileSync(join(tmp, p), buf);
   }
   const out = execFileSync("python3", [join(tmp, "scripts/build.py")], { encoding: "utf8" });
-  assert.match(out, /1 bai, 2 danh muc, 1 trang tinh/);
+  assert.match(out, /1 bai, 2 danh muc, 2 trang tinh/);
   assert.doesNotMatch(out, /WARN|ERROR/);
   const post = readFileSync(join(tmp, "html/bat-com-chieu-mua-noi-nho/index.html"), "utf8");
   assert.ok(post.includes("{{TITLE}} không được bị thay"), "nội dung chứa {{...}} phải giữ nguyên");
