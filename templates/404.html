@@ -1,27 +1,114 @@
 <!DOCTYPE html>
 <html lang="{{LANG}}">
-<head>
-{{HEAD}}
-</head>
-<body class="page-404">
-{{HEADER}}
-  <main id="main">
-    <section class="notfound">
-      <div class="container-narrow">
+  <head>
+    {{GOOGLE_ANALYTICS_CODE}}
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Language" content="{{LANG}}">
+    <title>Page not found | {{WEBSITE_NAME}}</title>
+    <meta name="description" content="The page you are looking for does not exist or has been moved.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, user-scalable=1" name="viewport">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="address=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <link rel="icon" href="{{FAVICON}}">
+    <meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
+    <style>
+.contact,.header-inner{align-items:center;display:flex}.contact,.menu-toggle{top:50%;transform:translateY(-50%)}header,nav.menu{border-bottom:1px solid var(--border-color)}.logo h1,nav.menu ul li a:hover{color:var(--main-red)}.mobile-menu ul li a,nav.menu ul li a{text-transform:uppercase;display:block}body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}.container{max-width:1168px;margin:0 auto;padding:0 16px}header{background:#fff;position:relative;z-index:10}.header-inner{justify-content:center;padding:10px 0;position:relative}.logo{text-align:center}.logo img{height:46px}.logo h1{font-size:1.6rem;margin:0;font-weight:800;white-space:nowrap}.contact{position:absolute;right:16px;gap:14px;font-size:.95rem}.contact a{text-decoration:none;color:#fff;display:flex;align-items:center;gap:6px}.contact img{height:20px}.menu-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;position:absolute;left:16px}.menu-toggle span{width:26px;height:3px;background:#111;display:block;transition:.3s}.footer-links a,nav.menu ul li a{transition:color .2s;text-decoration:none}nav.menu{background:#fff;border-top:1px solid var(--border-color)}nav.menu ul{display:flex;justify-content:center;margin:0;padding:0;list-style:none;gap:6px}nav.menu ul li a{padding:14px 18px;color:#111;font-weight:600;font-size:.95rem;white-space:nowrap}.mobile-menu{position:fixed;top:0;right:-100%;width:80%;max-width:400px;height:100vh;background:#fff;box-shadow:-3px 0 10px rgba(0,0,0,.1);transition:right .4s;z-index:999;display:flex;flex-direction:column;justify-content:center}.mobile-menu.active{right:0}.mobile-menu .close-btn{position:absolute;top:16px;right:20px;font-size:1.8rem;color:#333;cursor:pointer;user-select:none}.mobile-menu ul{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;padding:0 30px;list-style:none;margin:0;justify-items:center}.mobile-menu ul li a{text-decoration:none;color:#111;font-weight:600;text-align:center;padding:12px;border:1px solid var(--border-color);border-radius:8px;transition:background .2s}.mobile-menu ul li{width:100%}.mobile-menu ul li a:hover{background:var(--main-red);color:#fff}.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);opacity:0;visibility:hidden;transition:.3s;z-index:998}.mobile-overlay.active{opacity:1;visibility:visible}a{color:inherit}:root{--main-red:#c00;--border-color:#eee;--container-max:1200px;--accent:#0078ff;--bg:#f7f9fb;--card-bg:#ffffff;--muted:#6b7280;--radius:12px;--text:#111827;--shadow:0 6px 18px rgba(15, 23, 42, 0.06);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial}.site-footer{background:#f6f7f8;color:#333;font-family:Arial,sans-serif;padding-top:40px;border-top:1px solid #e0e0e0}.footer-container{max-width:1168px;padding:0 5%;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px}.footer-about{flex:1 1 35%}.footer-logo{width:150px;height:auto;margin-bottom:12px}.footer-about p{font-size:14px;color:#555;line-height:1.6;margin:0}.footer-links{flex:1 1 25%}.footer-contact h4,.footer-links h4{font-size:16px;text-transform:uppercase;margin-bottom:12px;color:#111}.footer-contact ul,.footer-links ul{list-style:none;margin:0;padding:0}.footer-links li{margin-bottom:8px}.footer-links a{color:#555;font-size:14px}.footer-links a:hover{color:#007b55}.footer-contact{flex:1 1 30%}.footer-contact ul li{font-size:14px;margin-bottom:8px;color:#555}.footer-contact a{color:#007b55;text-decoration:none}.footer-contact a:hover{text-decoration:underline}.footer-bottom{border-top:1px solid #ddd;margin-top:30px;text-align:center;padding:16px 0;background:#f2f2f2}.footer-bottom p{margin:0;font-size:13px;color:#666}@media (max-width:900px){.contact,nav.menu{display:none}.menu-toggle{display:flex}.logo img{height:40px}.footer-container{flex-direction:column;text-align:center}.footer-about,.footer-contact,.footer-links{flex:1 1 100%}.footer-logo{margin:0 auto 12px}}a{text-decoration:none;color:inherit}
+.notfound-section{background:var(--bg);padding:80px 16px;color:var(--text);min-height:50vh}.notfound-wrap{max-width:640px;margin:0 auto;text-align:center}.notfound-code{font-size:6rem;font-weight:800;color:var(--main-red);line-height:1;margin:0}.notfound-title{font-size:1.5rem;font-weight:700;margin:16px 0 8px;color:#0b1220}.notfound-desc{color:var(--muted);font-size:1rem;line-height:1.6;margin:0 0 28px}.notfound-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:36px}.notfound-btn{display:inline-block;padding:12px 26px;border-radius:8px;font-weight:600;text-decoration:none;transition:transform .18s,box-shadow .18s}.notfound-btn.primary{background:var(--main-red);color:#fff}.notfound-btn.secondary{background:#fff;color:var(--text);border:1px solid var(--border-color)}.notfound-btn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(15,23,42,.1)}.notfound-categories{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}.notfound-pill{display:inline-block;padding:8px 16px;border-radius:999px;background:#fff;border:1px solid var(--border-color);color:var(--text);text-decoration:none;font-size:.9rem;transition:background .18s,color .18s}.notfound-pill:hover{background:var(--main-red);border-color:var(--main-red);color:#fff}
+    </style>
+{{JSON_LD}}
+{{HEAD_HTML}}
+  </head>
+  <body>
+    <header>
+      <div class="container header-inner">
+        <div class="menu-toggle" id="menu-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="logo">
+          <a href="/">
+            {{LOGO_IMG}}
+          </a>
+        </div>
+      </div>
+    </header>
+    <nav class="menu">
+      <div class="container">
+        <ul>
+{{NAV_CATEGORIES}}
+        </ul>
+      </div>
+    </nav>
+    <div class="mobile-overlay" id="overlay"></div>
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="close-btn" id="close-menu">&times;</div>
+      <ul>
+{{MOBILE_NAV_CATEGORIES}}
+      </ul>
+    </div>
+
+    <section class="notfound-section">
+      <div class="notfound-wrap">
         <p class="notfound-code">404</p>
-        <h1>Trang này đã lạc mất trong câu chuyện</h1>
-        <p>Đường dẫn bạn mở không tồn tại hoặc đã được chuyển đi. Thử tìm kiếm, hoặc ghé một danh mục bên dưới.</p>
-        <form class="search-form" action="/tim-kiem/" method="get" role="search">
-          <input type="search" name="q" placeholder="Tìm câu chuyện..." aria-label="Từ khoá tìm kiếm">
-          <button class="btn" type="submit">Tìm</button>
-        </form>
-        <div class="notfound-pills">
+        <h1 class="notfound-title">Page not found</h1>
+        <p class="notfound-desc">The page you are looking for does not exist, has been removed, or the link is incorrect. Go back to the homepage or pick a category below.</p>
+        <div class="notfound-actions">
+          <a class="notfound-btn primary" href="/">Back to homepage</a>
+          <a class="notfound-btn secondary" href="{{CONTACT_URL}}">Contact us</a>
+        </div>
+        <div class="notfound-categories">
 {{CATEGORY_PILLS}}
         </div>
-        <a class="btn btn-ghost" href="/">← Về trang chủ</a>
       </div>
     </section>
-  </main>
-{{FOOTER}}
-</body>
+
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-col footer-about">
+          <a href="/">
+            {{FOOTER_LOGO}}
+          </a>
+          <p>{{WEBSITE_DESCRIPTION}}</p>
+        </div>
+        <div class="footer-col footer-links">
+          <h4>Information</h4>
+          <ul>
+{{FOOTER_PAGE_LINKS}}
+          </ul>
+        </div>
+        <div class="footer-col footer-contact">
+          <h4>Contact</h4>
+          <div class="footer-contact-list">
+{{FOOTER_CONTACT}}
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© {{YEAR}} {{SITE_NAME}}. All rights reserved by <a href="https://web100.vn">web100.vn</a></p>
+      </div>
+    </footer>
+  </body>
+  <script>
+    const toggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const overlay = document.getElementById('overlay');
+    const closeBtn = document.getElementById('close-menu');
+    toggle.addEventListener('click', () => {
+      mobileMenu.classList.add('active');
+      overlay.classList.add('active');
+    });
+    closeBtn.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+    overlay.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+  </script>
 </html>

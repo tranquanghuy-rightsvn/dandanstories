@@ -1,26 +1,26 @@
 [
   {
-    "slug": "doi-thuong",
-    "name": "Đời thường",
-    "description": "Những lát cắt bình dị của một ngày - căn bếp, góc phố, người thân và chính mình.",
+    "slug": "everyday-life",
+    "name": "Everyday Life",
+    "description": "Small slices of ordinary days - kitchens, street corners, family and the people we become.",
     "order": 1
   },
   {
-    "slug": "hanh-trinh",
-    "name": "Hành trình",
-    "description": "Ghi chép từ những chuyến đi xa và gần, nơi con đường dạy ta nhiều hơn điểm đến.",
+    "slug": "journeys",
+    "name": "Journeys",
+    "description": "Notes from trips near and far, where the road teaches more than the destination.",
     "order": 2
   },
   {
-    "slug": "ky-uc",
-    "name": "Ký ức",
-    "description": "Những điều đã qua nhưng chưa bao giờ thật sự rời đi.",
+    "slug": "memories",
+    "name": "Memories",
+    "description": "Things that have passed but never really left.",
     "order": 3
   },
   {
-    "slug": "truyen-ngan",
-    "name": "Truyện ngắn",
-    "description": "Truyện ngắn hư cấu - đọc trong mười phút, nhớ trong rất lâu.",
+    "slug": "short-fiction",
+    "name": "Short Fiction",
+    "description": "Short stories - ten minutes to read, a long time to remember.",
     "order": 4
   }
 ]

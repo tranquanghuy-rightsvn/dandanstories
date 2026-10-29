@@ -8,6 +8,12 @@ Dự án theo playbook `free-cms-static-site-pipeline`, mô hình nội dung gi�
 
 ## 0. Phạm vi
 
+Website công khai **hoàn toàn tiếng Anh** (độc giả quốc tế): giao diện, chữ do build sinh,
+định dạng ngày `Oct 28, 2026`, `lang=en`. **Giao diện giống hệt TrithucWorld** (template lấy từ
+`trithucworld/remake/templates/`, chỉ dịch chữ + đổi link sang `/slug/`) — không tự thiết kế lại.
+Trang quản trị (CMS) vẫn tiếng Việt cho người vận hành. Nội dung viết bằng tiếng Anh → slug tự
+sinh từ tiêu đề cũng là tiếng Anh.
+
 CMS quản lý ĐÚNG 5 mục: Bài viết, Danh mục, Trang tĩnh, Cài đặt website, Người dùng.
 Site 100% tĩnh — không có form công khai, không bình luận, không tài khoản người đọc.
 Website dựng được TỪ ĐẦU hoàn toàn qua CMS: repo khởi đầu với dữ liệu rỗng, build vẫn chạy và
@@ -62,7 +68,7 @@ trang chủ hiện trạng thái "đang chuẩn bị nội dung" cho tới khi c
 - Slug BẤT BIẾN sau lần Lưu đầu — chặn ở server (throw) + disable ô ở client. Tải ảnh bìa hoặc
   chèn ảnh nội dung cũng khoá slug ngay (ảnh đặt tên theo slug).
 - Slug phải DUY NHẤT trên toàn site (bài viết, danh mục, trang tĩnh cùng nằm ở `/<slug>/`) và
-  không trùng đường dẫn dành riêng: `images assets vendor admin tim-kiem trang feed sitemap 404`.
+  không trùng đường dẫn dành riêng: `images assets vendor admin search page feed sitemap 404`.
 - Ảnh trong editor hiển thị bằng URL tuyệt đối `raw.githubusercontent.com/<owner>/<repo>/<branch>/static/...`,
   đổi ngược về `/images/...` ngay trước khi lưu.
 - Form dùng chung DOM giữa tạo mới / sửa → mở form tạo mới phải tự bật lại ô slug.
@@ -87,8 +93,8 @@ Không áp dụng cho dự án này.
 ## VI-B. Danh mục, Trang tĩnh, Cài đặt website
 
 - **Danh mục**: tên, slug (`/<slug>/`, bất biến), mô tả (meta + đầu trang danh mục), thứ tự
-  (số nhỏ hiện trước trên menu + trang chủ). Trang danh mục phân trang 12 bài/trang:
-  `/<slug>/`, `/<slug>/trang-2/`, ...
+  (số nhỏ hiện trước trên menu + trang chủ). Trang danh mục `/<slug>/` hiện toàn bộ bài
+  của danh mục (không phân trang, giống TrithucWorld).
 - **Trang tĩnh** (Giới thiệu, Liên hệ, Chính sách...): tiêu đề, slug, mô tả, nội dung TinyMCE,
   thứ tự, "Hiện ở menu trên" (checkbox, mặc định tắt — luôn hiện ở footer).
 - **Cài đặt website** (admin trở lên): tên website, khẩu hiệu, mô tả SEO trang chủ, tên miền

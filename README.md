@@ -20,14 +20,14 @@ Cloudflare Workers Static Assets (free, cho phép thương mại, băng thông k
 ```
 
 URL đều dạng thư mục: bài viết, danh mục, trang tĩnh nằm ở `/<slug>/` (file `<slug>/index.html`),
-phân trang danh mục `/<slug>/trang-2/`, tìm kiếm `/tim-kiem/`, quản trị `/admin/`.
+quản trị `/admin/`.
+Website công khai hoàn toàn tiếng Anh; trang quản trị vẫn tiếng Việt.
 
 ## Cấu trúc thư mục
 
 | Thư mục / file | Vai trò | Ai sửa |
 |---|---|---|
-| `templates/*.html`, `templates/partials/*.html` | Giao diện (placeholder `{{TOKEN}}`) | Dev, sửa tay |
-| `static/assets/css/style.css`, `static/assets/js/main.js` | CSS/JS của site | Dev, sửa tay |
+| `templates/*.html` | Giao diện = giao diện TrithucWorld (HTML + CSS + JS inline, placeholder `{{TOKEN}}`), chữ tiếng Anh | Dev, sửa tay |
 | `static/admin/index.html` | Trang `/admin/` nhúng CMS (biến `CMS_URL`) | Dev, 1 lần sau deploy CMS |
 | `static/vendor/tinymce/` | Trình soạn thảo tự host (TinyMCE 6.8.5) | Không cần đụng |
 | `static/images/**` | Ảnh bài viết/trang/site | CMS tự ghi |
@@ -131,7 +131,7 @@ Mỗi lần Lưu/Xoá, website tự build lại và cập nhật sau ~1-2 phút.
 
 ## Sửa giao diện
 
-- Sửa `templates/` hoặc `static/assets/`, chạy `python3 scripts/build.py --demo` để xem, rồi
+- Sửa `templates/*.html` (CSS/JS nằm inline trong từng file, sửa đồng bộ cả 5 file nếu là phần chung như header/footer), chạy `python3 scripts/build.py --demo` để xem, rồi
   commit + push — GitHub Actions build lại `html/`, Cloudflare deploy (CSS/JS có `?v=<hash>` nên không dính cache cũ).
 - Trước khi push, nhớ `git pull`: CMS và GitHub Actions commit thẳng lên repo nên lịch sử 2 bên
   thường lệch. Không `push --force`. Không commit `html/` do mình tự build ở máy nếu khác với CI -
