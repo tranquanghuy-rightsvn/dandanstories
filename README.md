@@ -93,6 +93,9 @@ node scripts/test_gas_e2e.mjs       # chạy trọn luồng server CMS trên d�
    rồi tự tạo Sheet Users + kiểm tra đọc được repo (xem Execution log, phải ra "Đọc repo OK").
 6. **Deploy › New deployment › Web app**: Execute as *Me*, Who has access *Anyone*. Copy URL `/exec`.
 7. Dán URL đó vào biến `CMS_URL` trong `static/admin/index.html`, commit + push.
+
+   URL đang dùng (deploy 30/10/2026 — sửa CMS thì deploy **New version**, URL này không đổi):
+   `https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec`
 8. Mở `https://dandanstories.com/admin/` (hoặc thẳng URL `/exec`), đăng nhập bằng **email Google
    đã deploy** (luôn là quyền cao nhất, không cần khai báo).
 
