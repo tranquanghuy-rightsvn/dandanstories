@@ -1,0 +1,13 @@
+# Code CMS deploy bang clasp, KHONG dua len git (gotcha #10 cua playbook) - xem README.md.
+gas/
+
+# html/ la OUTPUT 100% cua scripts/build.py (xoa sach + sinh lai moi lan build).
+# Nguon that: templates/ + static/ + data/. Khong sua file nao trong html/.
+html/
+
+.wrangler/
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+.clasp.json

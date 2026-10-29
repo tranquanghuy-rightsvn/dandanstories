@@ -1,0 +1,29 @@
+[
+  {
+    "slug": "gioi-thieu",
+    "title": "Giới thiệu",
+    "description": "Về DanDan Stories và người đứng sau những câu chuyện.",
+    "order": 1,
+    "show_in_menu": true,
+    "content_html": "<p>DanDan Stories ra đời từ một cuốn sổ tay nhỏ, nơi tôi ghi lại những điều bình thường mà mình không muốn quên.</p><h2>Chúng tôi kể chuyện gì?</h2><p>Những câu chuyện đời thường, những chuyến đi, những ký ức và cả những truyện ngắn hư cấu - tất cả đều được viết chậm rãi và chân thật.</p>",
+    "updated_at": "2026-10-01T09:00:00+07:00"
+  },
+  {
+    "slug": "lien-he",
+    "title": "Liên hệ",
+    "description": "Gửi cho chúng tôi câu chuyện của bạn.",
+    "order": 2,
+    "show_in_menu": false,
+    "content_html": "<p>Bạn có một câu chuyện muốn kể? Hãy viết cho chúng tôi qua email <a href=\"mailto:hello@dandanstories.com\">hello@dandanstories.com</a>.</p>",
+    "updated_at": "2026-10-01T09:00:00+07:00"
+  },
+  {
+    "slug": "chinh-sach-bao-mat",
+    "title": "Chính sách bảo mật",
+    "description": "Cách DanDan Stories xử lý thông tin của người đọc.",
+    "order": 3,
+    "show_in_menu": false,
+    "content_html": "<p>Website không thu thập thông tin cá nhân của người đọc ngoài số liệu thống kê truy cập ẩn danh.</p>",
+    "updated_at": "2026-10-01T09:00:00+07:00"
+  }
+]

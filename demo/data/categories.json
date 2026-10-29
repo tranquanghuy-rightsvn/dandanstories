@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "doi-thuong",
+    "name": "Đời thường",
+    "description": "Những lát cắt bình dị của một ngày - căn bếp, góc phố, người thân và chính mình.",
+    "order": 1
+  },
+  {
+    "slug": "hanh-trinh",
+    "name": "Hành trình",
+    "description": "Ghi chép từ những chuyến đi xa và gần, nơi con đường dạy ta nhiều hơn điểm đến.",
+    "order": 2
+  },
+  {
+    "slug": "ky-uc",
+    "name": "Ký ức",
+    "description": "Những điều đã qua nhưng chưa bao giờ thật sự rời đi.",
+    "order": 3
+  },
+  {
+    "slug": "truyen-ngan",
+    "name": "Truyện ngắn",
+    "description": "Truyện ngắn hư cấu - đọc trong mười phút, nhớ trong rất lâu.",
+    "order": 4
+  }
+]

@@ -1,0 +1,13 @@
+# Cloudflare Worker (chi Static Assets, khong co Worker script) cho DanDan Stories.
+# Tao Worker cung ten `name` duoi day; CI deploy bang `wrangler deploy` (xem .github/workflows).
+name = "dandanstories"
+compatibility_date = "2026-10-01"
+
+[assets]
+directory = "./html"
+# MOI URL noi dung co dang "/<slug>/" va file nam o "<slug>/index.html" -> can phan giai
+# index thu muc. "auto-trailing-slash" (mac dinh): "/slug/" phuc vu slug/index.html,
+# "/slug" tu redirect 307 ve "/slug/". KHONG dung "none" (se lam "/" va "/slug/" 404).
+html_handling = "auto-trailing-slash"
+# Site nhieu trang (khong phai SPA): URL la tra html/404.html kem HTTP 404 THAT.
+not_found_handling = "404-page"

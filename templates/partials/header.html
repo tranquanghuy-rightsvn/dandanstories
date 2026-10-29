@@ -1,0 +1,37 @@
+  <a class="skip-link" href="#main">Bỏ qua, tới nội dung</a>
+  <div class="read-progress" aria-hidden="true"></div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/" aria-label="{{SITE_NAME}} - Trang chủ">{{BRAND}}</a>
+      <nav class="main-nav" aria-label="Danh mục">
+        <ul>
+{{NAV_ITEMS}}
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <a class="icon-btn" href="/tim-kiem/" aria-label="Tìm kiếm">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </a>
+        <button class="icon-btn menu-toggle" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="mobile-drawer">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="mobile-drawer" id="mobile-drawer" hidden>
+    <div class="drawer-panel">
+      <div class="drawer-head">
+        <span class="drawer-title">{{SITE_NAME}}</span>
+        <button class="icon-btn menu-close" type="button" aria-label="Đóng menu">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <form class="drawer-search" action="/tim-kiem/" method="get" role="search">
+        <input type="search" name="q" placeholder="Tìm câu chuyện..." aria-label="Tìm kiếm">
+      </form>
+      <ul class="drawer-nav">
+        <li><a href="/">Trang chủ</a></li>
+{{NAV_ITEMS}}
+      </ul>
+    </div>
+  </div>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}">
+<head>
+{{HEAD}}
+</head>
+<body class="page-category">
+{{HEADER}}
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Trang chủ</a><span>/</span><span>{{CATEGORY_NAME}}</span></nav>
+        <p class="eyebrow">Danh mục</p>
+        <h1>{{CATEGORY_NAME}}</h1>
+        <p class="page-hero-desc">{{CATEGORY_DESCRIPTION}}</p>
+        <p class="page-hero-count">{{POST_COUNT}} câu chuyện{{PAGE_LABEL}}</p>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+{{POST_GRID}}
+{{PAGINATION}}
+      </div>
+    </section>
+  </main>
+{{FOOTER}}
+</body>
+</html>

@@ -1,0 +1,35 @@
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-about">
+        <a class="brand brand-footer" href="/">{{SITE_NAME}}</a>
+        <p>{{FOOTER_ABOUT}}</p>
+{{SOCIAL_LINKS}}
+      </div>
+      <div>
+        <h3 class="footer-title">Danh mục</h3>
+        <ul class="footer-links">
+{{FOOTER_CATEGORIES}}
+        </ul>
+      </div>
+      <div>
+        <h3 class="footer-title">Thông tin</h3>
+        <ul class="footer-links">
+{{FOOTER_PAGES}}
+        </ul>
+      </div>
+      <div>
+        <h3 class="footer-title">Liên hệ</h3>
+        <ul class="footer-contact">
+{{FOOTER_CONTACT}}
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>© {{YEAR}} {{SITE_NAME}}. Mọi quyền được bảo lưu.</p>
+      <a href="/feed.xml">RSS</a>
+    </div>
+  </footer>
+  <button class="to-top" type="button" aria-label="Lên đầu trang">
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <script src="/assets/js/main.js?v={{JS_VERSION}}" defer></script>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}">
+<head>
+{{HEAD}}
+</head>
+<body class="page-search">
+{{HEADER}}
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Tìm kiếm</p>
+        <h1>Tìm một câu chuyện</h1>
+        <form class="search-form" action="/tim-kiem/" method="get" role="search">
+          <input id="search-input" type="search" name="q" placeholder="Nhập tên câu chuyện, chủ đề, từ khoá..." autocomplete="off" aria-label="Từ khoá tìm kiếm">
+          <button class="btn" type="submit">Tìm</button>
+        </form>
+        <p class="search-status" id="search-status" aria-live="polite"></p>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <div class="grid grid-3" id="search-results"></div>
+      </div>
+    </section>
+  </main>
+{{FOOTER}}
+</body>
+</html>

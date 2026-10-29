@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}">
+<head>
+{{HEAD}}
+</head>
+<body class="page-post">
+{{HEADER}}
+  <main id="main">
+    <article class="article">
+      <header class="article-header container-narrow">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Trang chủ</a><span>/</span><a href="{{CATEGORY_URL}}">{{CATEGORY_NAME}}</a></nav>
+        <a class="pill" href="{{CATEGORY_URL}}">{{CATEGORY_NAME}}</a>
+        <h1 class="article-title">{{TITLE}}</h1>
+        <p class="article-lead">{{DESCRIPTION}}</p>
+        <div class="article-meta">
+          <span class="author-avatar" aria-hidden="true">{{AUTHOR_INITIAL}}</span>
+          <span class="meta-author">{{AUTHOR}}</span>
+          <span class="dot" aria-hidden="true">•</span>
+          <time datetime="{{DATE_ISO}}">{{DATE_DISPLAY}}</time>
+          <span class="dot" aria-hidden="true">•</span>
+          <span>{{READING_MINUTES}} phút đọc</span>
+        </div>
+      </header>
+      <figure class="article-cover container-wide">
+        <img src="{{COVER_LG}}" alt="{{TITLE}}" width="1200" height="800" fetchpriority="high">
+      </figure>
+      <div class="prose container-narrow">
+{{CONTENT}}
+      </div>
+      <footer class="article-footer container-narrow">
+{{TAGS}}
+        <div class="share">
+          <span class="share-label">Chia sẻ câu chuyện</span>
+          <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u={{CANONICAL_ENC}}" target="_blank" rel="noopener" aria-label="Chia sẻ lên Facebook">Facebook</a>
+          <a class="share-btn" href="https://twitter.com/intent/tweet?url={{CANONICAL_ENC}}&amp;text={{TITLE_ENC}}" target="_blank" rel="noopener" aria-label="Chia sẻ lên X">X</a>
+          <button class="share-btn copy-link" type="button" data-url="{{CANONICAL}}">Sao chép liên kết</button>
+        </div>
+{{PREV_NEXT}}
+      </footer>
+    </article>
+{{RELATED}}
+  </main>
+{{FOOTER}}
+</body>
+</html>
