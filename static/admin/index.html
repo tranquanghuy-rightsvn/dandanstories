@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin - DanDan Stories</title>
+<title>Trang quản trị - DanDan Stories</title>
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet">
 <meta name="referrer" content="no-referrer">
 <link rel="icon" href="/assets/favicon.svg">
 <!-- Admin panel embedded on the site domain. If it does not load within 12 seconds, an
-     "Open in a new tab" button appears. Change the panel address in CMS_URL below. -->
+     "Mở ở tab riêng" button appears. Change the panel address in CMS_URL below. -->
 <style>
   html, body { height: 100%; margin: 0; overflow: hidden; background: #f5f6f8;
                font-family: "Open Sans", "Segoe UI", sans-serif; color: #1c1c1c; }
@@ -53,14 +53,14 @@
 <div class="cms-status" id="cms-status">
   <div>
     <div class="spinner" id="cms-spinner"></div>
-    <h2 id="cms-status-title">Opening the admin panel...</h2>
-    <p id="cms-status-text">If it does not open within 12 seconds, use the button below.</p>
-    <a id="cms-open-tab" href="#" rel="nofollow noreferrer" style="display:none">Open in a new tab</a>
+    <h2 id="cms-status-title">Đang mở trang quản trị...</h2>
+    <p id="cms-status-text">Nếu quá 12 giây vẫn chưa vào được, dùng nút bên dưới.</p>
+    <a id="cms-open-tab" href="#" rel="nofollow noreferrer" style="display:none">Mở ở tab riêng</a>
   </div>
 </div>
 
 <div class="cms-viewport">
-  <iframe class="cms-frame" id="cms-frame" title="Admin panel" referrerpolicy="no-referrer"></iframe>
+  <iframe class="cms-frame" id="cms-frame" title="Trang quản trị" referrerpolicy="no-referrer"></iframe>
 </div>
 
 <script>
@@ -85,9 +85,9 @@
     if (loaded) return;
     console.warn('[admin] not loaded after 12s - showing direct link');
     document.getElementById('cms-spinner').style.display = 'none';
-    document.getElementById('cms-status-title').textContent = 'The admin panel could not be embedded';
+    document.getElementById('cms-status-title').textContent = 'Không nhúng được trang quản trị';
     document.getElementById('cms-status-text').textContent =
-      'This browser blocked the embedded admin panel. Use the button below to open it directly.';
+      'Trình duyệt này không cho hiển thị trang quản trị bên trong website. Bấm nút bên dưới để mở theo cách thường.';
     document.getElementById('cms-open-tab').style.display = 'inline-block';
   }, 12000);
 
