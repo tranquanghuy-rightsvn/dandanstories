@@ -11,7 +11,10 @@ CMS (Google Apps Script, thư mục gas/)  ── đăng nhập OTP qua email, s
 Repo GitHub: data/*.json (nội dung) + static/images/** (ảnh)
    │  push vào 1 trong 4 file "chốt" data/{website,categories,posts,pages}.json
    ▼
-Cloudflare Workers Builds (kết nối thẳng repo): python3 scripts/build.py -> html/ -> wrangler deploy
+GitHub Actions: python3 scripts/build.py -> html/ -> commit "CI: build html from data" vào repo
+   │  html/ đổi
+   ▼
+Cloudflare Workers Builds (kết nối thẳng repo, không build gì): wrangler deploy html/
    ▼
 Cloudflare Workers Static Assets (free, cho phép thương mại, băng thông không giới hạn)
 ```
@@ -30,16 +33,16 @@ phân trang danh mục `/<slug>/trang-2/`, tìm kiếm `/tim-kiem/`, quản tr�
 | `static/images/**` | Ảnh bài viết/trang/site | CMS tự ghi |
 | `data/*.json`, `data/posts/*.json` | Nội dung | CMS tự ghi — **không sửa tay** |
 | `scripts/build.py` | Builder (Python stdlib, không cần cài gì) | Dev |
-| `html/` | Output build — **gitignore**, xoá sạch và sinh lại mỗi lần build | Không ai |
+| `html/` | Output build — GitHub Actions xoá sạch, sinh lại và commit; Cloudflare deploy từ đây | Không ai sửa tay |
 | `gas/` | Code CMS — **gitignore**, deploy bằng `clasp` | Dev |
 | `demo/` | Dữ liệu mẫu để xem trước giao diện | Dev |
 
 ## Xem thử ở máy
 
 ```bash
-python3 scripts/build.py --demo                     # build bằng dữ liệu mẫu (9 bài, 4 danh mục)
-python3 -m http.server 8000 --directory html        # mở http://localhost:8000
-python3 scripts/build.py                            # build bằng dữ liệu thật (data/) - ban đầu rỗng
+python3 scripts/build.py --demo                     # dữ liệu mẫu (9 bài, 4 danh mục) -> html-demo/
+python3 -m http.server 8000 --directory html-demo   # mở http://localhost:8000
+python3 scripts/build.py                            # dữ liệu thật (data/) -> html/ (CI cũng chạy đúng lệnh này)
 ```
 
 Kiểm tra trước khi deploy CMS:
@@ -59,32 +62,32 @@ node scripts/test_gas_e2e.mjs       # chạy trọn luồng server CMS trên d�
    git init -b main && git add . && git commit -m "Khởi tạo DanDan Stories"
    git remote add origin git@github.com:<owner>/dandanstories.git && git push -u origin main
    ```
-   (`gas/` và `html/` đã nằm trong `.gitignore`.)
+   (`gas/` nằm trong `.gitignore`; `html/` ĐƯỢC commit - do GitHub Actions sinh ra.)
 3. Tạo **fine-grained Personal Access Token**: chỉ chọn đúng repo này, quyền
    *Contents: Read and write*. Token này dành riêng cho CMS.
 
-### 2. Cloudflare (Workers Builds - build thẳng từ repo, không dùng GitHub Actions)
+### 2. Build (GitHub Actions) + deploy (Cloudflare)
 
-1. Cloudflare dashboard › Workers & Pages › Create › **Import a repository** › chọn repo
-   `dandanstories`, nhánh `master`.
-2. Cấu hình build:
+**GitHub Actions** (`.github/workflows/build.yml`) - không cần secret nào:
+- Chạy khi 1 trong 4 file chốt `data/{posts,pages,categories,website}.json` đổi, hoặc khi đổi
+  `templates/`, `static/` (trừ `static/images/`), `scripts/build.py`. Chạy tay: tab Actions ›
+  *Build HTML DanDan Stories* › Run workflow.
+- Build `html/` rồi commit `CI: build html from data` vào repo. Repo › Settings › Actions ›
+  General › Workflow permissions phải là **Read and write** (workflow đã khai `contents: write`,
+  nhưng org/repo đặt chế độ read-only thì vẫn bị chặn).
+
+**Cloudflare** (Workers Builds, kết nối thẳng repo - không dùng API token):
+1. Workers & Pages › Create › **Import a repository** › repo `dandanstories`, nhánh `master`.
+2. Cấu hình:
    | Mục | Giá trị |
    |---|---|
-   | Project/Worker name | `dandanstories` (PHẢI trùng `name` trong `wrangler.toml`) |
-   | Build command | `python3 scripts/build.py` |
+   | Worker name | `dandanstories` (PHẢI trùng `name` trong `wrangler.toml`) |
+   | Build command | để trống (`html/` đã được GitHub Actions build sẵn) |
    | Deploy command | `npx wrangler deploy` |
-   | Root directory | để trống (gốc repo) |
-3. Settings › Build › **Build watch paths** (để mỗi ảnh CMS tải lên không kích hoạt 1 lần build -
-   CMS ghi nhiều commit cho 1 thao tác, chỉ file chốt ghi sau cùng mới cần build):
-   - Include: `data/posts.json`, `data/pages.json`, `data/categories.json`, `data/website.json`,
-     `templates/*`, `static/*`, `scripts/build.py`, `wrangler.toml`
-   - Exclude: `static/images/*`
-4. Gắn tên miền: Worker › Settings › Domains & Routes › Custom Domain `dandanstories.com`
-   (tên miền phải đang dùng nameserver Cloudflare). Kiểm tra:
-   `curl -sI https://dandanstories.com/ | grep -i server` phải ra `cloudflare`.
-
-Gói free của Workers Builds giới hạn số lần build/tháng (xem Cloudflare › Billing) - watch paths ở
-bước 3 giúp không tốn lượt vô ích.
+3. Settings › Build › **Build watch paths**: Include `html/*`, `wrangler.toml` - chỉ deploy khi
+   bản build mới được commit, không deploy theo từng commit ảnh/dữ liệu của CMS.
+4. Gắn tên miền: Worker › Settings › Domains & Routes › Custom Domain `dandanstories.com`.
+   Kiểm tra: `curl -sI https://dandanstories.com/ | grep -i server` phải ra `cloudflare`.
 
 ### 3. CMS (Google Apps Script)
 
@@ -129,9 +132,10 @@ Mỗi lần Lưu/Xoá, website tự build lại và cập nhật sau ~1-2 phút.
 ## Sửa giao diện
 
 - Sửa `templates/` hoặc `static/assets/`, chạy `python3 scripts/build.py --demo` để xem, rồi
-  commit + push — Cloudflare tự build + deploy (CSS/JS có `?v=<hash>` nên không dính cache cũ).
-- Trước khi push, nhớ `git pull`: CMS commit thẳng lên repo nên lịch sử 2 bên thường lệch
-  (thường không xung đột vì CMS chỉ ghi `data/` + `static/images/`). Không `push --force`.
+  commit + push — GitHub Actions build lại `html/`, Cloudflare deploy (CSS/JS có `?v=<hash>` nên không dính cache cũ).
+- Trước khi push, nhớ `git pull`: CMS và GitHub Actions commit thẳng lên repo nên lịch sử 2 bên
+  thường lệch. Không `push --force`. Không commit `html/` do mình tự build ở máy nếu khác với CI -
+  cứ để GitHub Actions sinh (nếu lỡ lệch, lần build kế tiếp tự ghi đè).
 
 ## Lưu ý vận hành
 

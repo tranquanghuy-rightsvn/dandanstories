@@ -1,9 +1,9 @@
 # Code CMS deploy bang clasp, KHONG dua len git (gotcha #10 cua playbook) - xem README.md.
 gas/
 
-# html/ la OUTPUT 100% cua scripts/build.py (xoa sach + sinh lai moi lan build).
-# Nguon that: templates/ + static/ + data/. Khong sua file nao trong html/.
-html/
+# html/ DUOC commit (GitHub Actions build roi commit nguoc, Cloudflare deploy tu repo) - nhung
+# khong sua tay file nao trong do. Ban build du lieu mau ra html-demo/ (khong commit).
+html-demo/
 
 .wrangler/
 node_modules/

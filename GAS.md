@@ -117,8 +117,8 @@ Không áp dụng cho dự án này.
 
 - Google Sheet "DanDan Stories CMS Data" (tự tạo lần đầu): sheet `Users` — cột `email`, `role`
   (`admin` | `editor` | `root`).
-- GitHub (Contents API) — đường dẫn cố định, đổi thì sửa luôn `scripts/build.py` + Build watch paths
-  trên Cloudflare:
+- GitHub (Contents API) — đường dẫn cố định, đổi thì sửa luôn `scripts/build.py` +
+  `.github/workflows/build.yml`:
   | Đường dẫn | Nội dung | Commit chốt? |
   |---|---|---|
   | `data/website.json` | cài đặt website | ✔ (Lưu cài đặt / tải ảnh site) |
@@ -129,10 +129,11 @@ Không áp dụng cho dự án này.
   | `static/images/posts/<slug>/cover-lg.webp`, `cover-sm.webp`, `content-N.webp` | ảnh bài | |
   | `static/images/pages/<slug>/content-N.webp` | ảnh trang tĩnh | |
   | `static/images/site/logo.*`, `favicon.png`, `og-default.jpg` | ảnh site | |
-- File chốt LUÔN ghi SAU CÙNG trong 1 thao tác. Cloudflare chỉ build khi file chốt đổi (hoặc code/giao
+- File chốt LUÔN ghi SAU CÙNG trong 1 thao tác. GitHub Actions chỉ build khi file chốt đổi (hoặc code/giao
   diện đổi), KHÔNG chạy theo `static/images/**`.
-- `html/` là output 100% của build (gitignore) — Cloudflare Workers Builds build lại từ đầu mỗi lần rồi deploy.
-- Độ trễ Lưu → thấy trên site: ~1-2 phút (Cloudflare Workers Builds: build + deploy).
+- `html/` là output 100% của build — GitHub Actions xoá sạch, build lại, commit vào repo
+  ("CI: build html from data"); Cloudflare Workers Builds thấy `html/` đổi thì deploy. Không sửa tay.
+- Độ trễ Lưu → thấy trên site: ~1-2 phút (GitHub Actions build + Cloudflare deploy).
 
 ## IX. Bug đã gặp ở dự án này
 

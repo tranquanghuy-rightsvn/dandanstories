@@ -1,0 +1,16 @@
+# Cloudflare Workers Static Assets - header theo duong dan.
+# Trang quan tri: chan index bang header (lop manh nhat) - CO Y khong khai Disallow trong
+# robots.txt (file cong khai, khai la tu quang cao duong dan quan tri).
+/admin/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex
+  Referrer-Policy: no-referrer
+
+# CSS/JS da gan ?v=<hash> trong HTML -> cache dai duoc.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=2592000
+
+/vendor/*
+  Cache-Control: public, max-age=2592000

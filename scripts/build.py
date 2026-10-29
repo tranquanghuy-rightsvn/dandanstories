@@ -11,7 +11,8 @@ Quy uoc (chot o GAS.md muc VIII):
   templates/*.html          thiet ke (placeholder {{TOKEN}}), sua tay
   static/**                 CSS/JS/anh/vendor/admin - copy nguyen vao html/
 
-Output: html/ (XOA SACH va sinh lai moi lan build - gitignore, khong sua tay):
+Output: html/ (XOA SACH va sinh lai moi lan build; GitHub Actions commit nguoc vao repo,
+Cloudflare deploy tu do - khong sua tay):
   html/index.html                         trang chu
   html/<slug>/index.html                  bai viet, danh muc, trang tinh (URL "/<slug>/")
   html/<danh-muc>/trang-<n>/index.html    phan trang danh muc
@@ -22,7 +23,8 @@ Vi html/ luon sinh lai tu dau, khong co file "mo coi" sau khi xoa bai qua CMS.
 
 Chay:
   python3 scripts/build.py           # du lieu that (data/)
-  python3 scripts/build.py --demo    # du lieu mau (demo/data + demo/static) de xem giao dien
+  python3 scripts/build.py --demo    # du lieu mau (demo/data + demo/static) -> html-demo/ (khong
+                                     # dung vao html/ that dang duoc commit)
 """
 import argparse
 import hashlib
@@ -39,7 +41,7 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES = ROOT / "templates"
 STATIC = ROOT / "static"
-OUT = ROOT / "html"
+OUT = ROOT / "html"  # --demo doi sang html-demo/ (xem main)
 
 POSTS_PER_PAGE = 12
 # Phai khop RESERVED_SLUGS trong gas/Code.js (gas/ khong nam trong git nen 2 cho nay KHONG tu
@@ -714,7 +716,10 @@ def main():
     parser.add_argument("--demo", action="store_true", help="dung du lieu mau trong demo/ thay cho data/")
     args = parser.parse_args()
 
+    global OUT
     data_dir = ROOT / ("demo/data" if args.demo else "data")
+    if args.demo:
+        OUT = ROOT / "html-demo"
     website, categories, posts, pages = load_data(data_dir)
     if not check_slugs(categories, posts, pages):
         sys.exit(1)
@@ -739,8 +744,8 @@ def main():
     build_sitemap(site, cat_pages)
     build_feed(site)
     build_misc(site)
-    print("Done (%s): %d bai, %d danh muc, %d trang tinh -> html/" % (
-        "demo" if args.demo else "data", len(site.posts), len(site.categories), len(site.pages)))
+    print("Done (%s): %d bai, %d danh muc, %d trang tinh -> %s/" % (
+        "demo" if args.demo else "data", len(site.posts), len(site.categories), len(site.pages), OUT.name))
 
 
 if __name__ == "__main__":
