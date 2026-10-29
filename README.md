@@ -11,7 +11,7 @@ CMS (Google Apps Script, thư mục gas/)  ── đăng nhập OTP qua email, s
 Repo GitHub: data/*.json (nội dung) + static/images/** (ảnh)
    │  push vào 1 trong 4 file "chốt" data/{website,categories,posts,pages}.json
    ▼
-GitHub Actions: python3 scripts/build.py  ->  html/  ->  wrangler deploy
+Cloudflare Workers Builds (kết nối thẳng repo): python3 scripts/build.py -> html/ -> wrangler deploy
    ▼
 Cloudflare Workers Static Assets (free, cho phép thương mại, băng thông không giới hạn)
 ```
@@ -63,16 +63,28 @@ node scripts/test_gas_e2e.mjs       # chạy trọn luồng server CMS trên d�
 3. Tạo **fine-grained Personal Access Token**: chỉ chọn đúng repo này, quyền
    *Contents: Read and write*. Token này dành riêng cho CMS.
 
-### 2. Cloudflare
+### 2. Cloudflare (Workers Builds - build thẳng từ repo, không dùng GitHub Actions)
 
-1. Tạo API Token với quyền **Account › Workers Scripts › Edit**, lấy thêm **Account ID**.
-2. Repo GitHub › Settings › Secrets and variables › Actions: thêm `CLOUDFLARE_API_TOKEN`,
-   `CLOUDFLARE_ACCOUNT_ID`.
-3. Chạy workflow lần đầu (tab Actions › *Build & deploy DanDan Stories* › Run workflow). Worker
-   tên `dandanstories` (khớp `wrangler.toml`) được tạo tự động, site chạy ở `*.workers.dev`.
+1. Cloudflare dashboard › Workers & Pages › Create › **Import a repository** › chọn repo
+   `dandanstories`, nhánh `master`.
+2. Cấu hình build:
+   | Mục | Giá trị |
+   |---|---|
+   | Project/Worker name | `dandanstories` (PHẢI trùng `name` trong `wrangler.toml`) |
+   | Build command | `python3 scripts/build.py` |
+   | Deploy command | `npx wrangler deploy` |
+   | Root directory | để trống (gốc repo) |
+3. Settings › Build › **Build watch paths** (để mỗi ảnh CMS tải lên không kích hoạt 1 lần build -
+   CMS ghi nhiều commit cho 1 thao tác, chỉ file chốt ghi sau cùng mới cần build):
+   - Include: `data/posts.json`, `data/pages.json`, `data/categories.json`, `data/website.json`,
+     `templates/*`, `static/*`, `scripts/build.py`, `wrangler.toml`
+   - Exclude: `static/images/*`
 4. Gắn tên miền: Worker › Settings › Domains & Routes › Custom Domain `dandanstories.com`
    (tên miền phải đang dùng nameserver Cloudflare). Kiểm tra:
    `curl -sI https://dandanstories.com/ | grep -i server` phải ra `cloudflare`.
+
+Gói free của Workers Builds giới hạn số lần build/tháng (xem Cloudflare › Billing) - watch paths ở
+bước 3 giúp không tốn lượt vô ích.
 
 ### 3. CMS (Google Apps Script)
 
@@ -117,7 +129,7 @@ Mỗi lần Lưu/Xoá, website tự build lại và cập nhật sau ~1-2 phút.
 ## Sửa giao diện
 
 - Sửa `templates/` hoặc `static/assets/`, chạy `python3 scripts/build.py --demo` để xem, rồi
-  commit + push — CI tự build + deploy (CSS/JS có `?v=<hash>` nên không dính cache cũ).
+  commit + push — Cloudflare tự build + deploy (CSS/JS có `?v=<hash>` nên không dính cache cũ).
 - Trước khi push, nhớ `git pull`: CMS commit thẳng lên repo nên lịch sử 2 bên thường lệch
   (thường không xung đột vì CMS chỉ ghi `data/` + `static/images/`). Không `push --force`.
 
