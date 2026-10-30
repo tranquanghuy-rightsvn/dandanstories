@@ -103,7 +103,7 @@ node scripts/test_gas_e2e.mjs       # chạy trọn luồng server CMS trên d�
    | `GITHUB_OWNER` | user/org GitHub |
    | `GITHUB_REPO` | `dandanstories` |
    | `GITHUB_BRANCH` | `main` |
-   | `SITE_URL` | `https://rapidfanpost.com/` — điền SAU khi site đã chạy (để trình soạn thảo tải từ chính site); trước đó để trống |
+   | `SITE_URL` | **không điền** — tên miền `https://rapidfanpost.com/` đã ghi sẵn trong code (`DEFAULT_SITE_URL`) |
    | `SPREADSHEET_ID` | **không điền** — tự tạo lần đầu |
 5. Chọn hàm `setup` › Run 1 lần trong editor: Google hỏi cấp quyền (Mail, Sheets, gọi URL ngoài),
    rồi tự tạo Sheet Users + kiểm tra đọc được repo (xem Execution log, phải ra "Đọc repo OK").
