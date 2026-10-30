@@ -243,8 +243,8 @@ call("savePage", edToken, { isNew: true, title: "Liên hệ", content_html: "<p>
 
 // 6. Cài đặt website (admin/root).
 throws("saveWebsite", /https:\/\//, token, { site_name: "DanDan", domain_url: "dandan.com" });
-const w = call("saveWebsite", token, { site_name: "DanDan Stories", domain_url: "https://dandanstories.com", ga_id: "G-ABC123", ads_txt: "google.com, pub-1, DIRECT" });
-assert.equal(w.domain_url, "https://dandanstories.com/");
+const w = call("saveWebsite", token, { site_name: "DanDan Stories", domain_url: "https://rapidfanpost.com", ga_id: "G-ABC123", ads_txt: "google.com, pub-1, DIRECT" });
+assert.equal(w.domain_url, "https://rapidfanpost.com/");
 call("uploadSiteImage", token, "logo", img("png"));
 const w2 = call("uploadSiteImage", token, "logo", img("webp"));
 assert.ok(!repo.has("static/images/site/logo.png"), "logo đuôi cũ phải bị xoá");
@@ -268,7 +268,7 @@ assert.match(api({ action: "ping", key: "dds_sai" }).error, /Invalid or revoked/
 assert.match(api({ action: "nope", key: apiKey }).error, /Unknown action/);
 const ping = api({ action: "ping", key: apiKey }, "GET");
 assert.equal(ping.ok, true);
-assert.equal(ping.data.guide, "https://dandanstories.com/admin/api/");
+assert.equal(ping.data.guide, "https://rapidfanpost.com/admin/api/");
 assert.match(api({ action: "post.create", key: apiKey, title: "X" }, "GET").error, /must be called with POST/);
 assert.match(api({ action: "post.create", key: apiKey, title: "A Night Train", category: "nope", cover: "https://img.example/cover.jpg" }).error, /Category "nope" does not exist/);
 assert.match(api({ action: "post.create", key: apiKey, title: "A Night Train", category: "hanh-trinh" }).error, /Missing "cover"/);
@@ -282,7 +282,7 @@ const created = api({
 assert.equal(created.ok, true, created.error);
 const rec = created.data.record;
 assert.equal(rec.slug, "a-night-train-to-hue");
-assert.equal(rec.url, "https://dandanstories.com/a-night-train-to-hue/");
+assert.equal(rec.url, "https://rapidfanpost.com/a-night-train-to-hue/");
 assert.equal(rec.keywords, "night train, slow travel");
 assert.match(rec.cover.lg, /^images\/posts\/a-night-train-to-hue\/cover-lg\.jpg/);
 const got = api({ action: "post.get", key: apiKey, slug: rec.slug }, "GET").data;

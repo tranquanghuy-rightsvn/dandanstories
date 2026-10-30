@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://dandanstories.com/sitemap.xml
+Sitemap: https://rapidfanpost.com/sitemap.xml

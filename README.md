@@ -87,8 +87,8 @@ node scripts/test_gas_e2e.mjs       # chạy trọn luồng server CMS trên d�
    | Deploy command | `npx wrangler deploy` |
 3. Settings › Build › **Build watch paths**: Include `html/*`, `wrangler.toml` - chỉ deploy khi
    bản build mới được commit, không deploy theo từng commit ảnh/dữ liệu của CMS.
-4. Gắn tên miền: Worker › Settings › Domains & Routes › Custom Domain `dandanstories.com`.
-   Kiểm tra: `curl -sI https://dandanstories.com/ | grep -i server` phải ra `cloudflare`.
+4. Gắn tên miền: Worker › Settings › Domains & Routes › Custom Domain `rapidfanpost.com`.
+   Kiểm tra: `curl -sI https://rapidfanpost.com/ | grep -i server` phải ra `cloudflare`.
 
 ### 3. CMS (Google Apps Script)
 
@@ -103,7 +103,7 @@ node scripts/test_gas_e2e.mjs       # chạy trọn luồng server CMS trên d�
    | `GITHUB_OWNER` | user/org GitHub |
    | `GITHUB_REPO` | `dandanstories` |
    | `GITHUB_BRANCH` | `main` |
-   | `SITE_URL` | `https://dandanstories.com/` — điền SAU khi site đã chạy (để trình soạn thảo tải từ chính site); trước đó để trống |
+   | `SITE_URL` | `https://rapidfanpost.com/` — điền SAU khi site đã chạy (để trình soạn thảo tải từ chính site); trước đó để trống |
    | `SPREADSHEET_ID` | **không điền** — tự tạo lần đầu |
 5. Chọn hàm `setup` › Run 1 lần trong editor: Google hỏi cấp quyền (Mail, Sheets, gọi URL ngoài),
    rồi tự tạo Sheet Users + kiểm tra đọc được repo (xem Execution log, phải ra "Đọc repo OK").
@@ -112,7 +112,7 @@ node scripts/test_gas_e2e.mjs       # chạy trọn luồng server CMS trên d�
 
    URL đang dùng (deploy 30/10/2026 — sửa CMS thì deploy **New version**, URL này không đổi):
    `https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec`
-8. Mở `https://dandanstories.com/admin/` (hoặc thẳng URL `/exec`), đăng nhập bằng **email Google
+8. Mở `https://rapidfanpost.com/admin/` (hoặc thẳng URL `/exec`), đăng nhập bằng **email Google
    đã deploy** (luôn là quyền cao nhất, không cần khai báo).
 
 Các lần sửa CMS sau: `clasp push` › Deploy › Manage deployments › Edit › **New version**
@@ -128,7 +128,7 @@ từ nội dung `app.html` + `js.html`, cache cũ trên máy người dùng tự
 4. **Bài viết**: tiêu đề → ảnh bìa → nội dung (nút ảnh trên thanh công cụ để chèn ảnh) → Lưu.
 5. **Người dùng**: thêm email biên tập viên (`editor`) hoặc quản trị (`admin`).
 6. **Kết nối AI** (tuỳ chọn): tạo khoá → "Chép lệnh cho AI" → dán vào Claude/ChatGPT trên máy,
-   AI tự đọc `https://dandanstories.com/admin/api/` rồi đăng bài (nội dung tiếng Anh). Xem `GAS.md` mục XI.
+   AI tự đọc `https://rapidfanpost.com/admin/api/` rồi đăng bài (nội dung tiếng Anh). Xem `GAS.md` mục XI.
 
 Mỗi lần Lưu/Xoá, website tự build lại và cập nhật sau ~1-2 phút.
 

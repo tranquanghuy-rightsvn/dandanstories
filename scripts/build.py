@@ -47,7 +47,7 @@ DEFAULT_WEBSITE = {
     "site_name": "DanDan Stories",
     "tagline": "Small stories that stay with you.",
     "description": "DanDan Stories - everyday stories, memories, journeys and short fiction, told slowly and honestly.",
-    "domain_url": "https://dandanstories.com/",
+    "domain_url": "https://rapidfanpost.com/",
     "lang": "en",
     "author_default": "DanDan",
     "footer_about": "A quiet corner of the internet for telling and reading everyday stories - slow, honest and warm.",

@@ -155,7 +155,7 @@ tự động qua hook khi sửa `gas/*.html`) và `node scripts/test_gas_e2e.mjs
 - `GITHUB_TOKEN` — fine-grained PAT, Contents: Read and write, đúng 1 repo.
 - `GITHUB_OWNER`, `GITHUB_REPO`, `GITHUB_BRANCH` — bắt buộc.
 - `SPREADSHEET_ID` — KHÔNG cần điền, code tự tạo lần đầu.
-- `SITE_URL` — tuỳ chọn, vd `https://dandanstories.com/`. Có thì trình soạn thảo tải từ
+- `SITE_URL` — tuỳ chọn, vd `https://rapidfanpost.com/`. Có thì trình soạn thảo tải từ
   `<SITE_URL>vendor/tinymce/` (tự host); chưa có site thì để trống → dùng bản CDN cùng phiên bản 6.8.5.
 
 ## XI. API cho công cụ AI (khoá kết nối) — theo mẫu dolphinhouse.vn

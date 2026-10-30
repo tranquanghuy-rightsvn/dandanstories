@@ -135,7 +135,7 @@ function lsSeedLoggedIn(role) {
       posts: [{ slug: "bai-a", title: "Bài A", category: "cat-a", description: "", date: "2026-01-01", cover: { lg: "images/posts/bai-a/cover-lg.webp", sm: "images/posts/bai-a/cover-sm.webp" }, draft: true, featured: true }],
       categories: [{ slug: "cat-a", name: "Danh mục A", description: "", order: 1 }],
       pages: [{ slug: "gioi-thieu", title: "Giới thiệu", description: "", order: 1, show_in_menu: true, content_html: "<p>x</p>" }],
-      website: { site_name: "DanDan Stories", domain_url: "https://dandanstories.com/", logo: "images/site/logo.webp?v=1" },
+      website: { site_name: "DanDan Stories", domain_url: "https://rapidfanpost.com/", logo: "images/site/logo.webp?v=1" },
       github: { owner: "o", repo: "r", branch: "master" },
     }),
     [LS_PREFIX + "users_" + CLIENT_BUILD]: JSON.stringify([
