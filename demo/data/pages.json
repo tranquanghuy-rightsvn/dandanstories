@@ -2,10 +2,10 @@
   {
     "slug": "about",
     "title": "About",
-    "description": "About DanDan Stories and the people behind the stories.",
+    "description": "About RapidFanPost and the people behind the stories.",
     "order": 1,
     "show_in_menu": true,
-    "content_html": "<p>DanDan Stories began as a small notebook where I wrote down ordinary things I didn't want to forget.</p><h2>What we write about</h2><p>Everyday life, journeys, memories and short fiction - all written slowly and honestly, for readers anywhere in the world.</p>",
+    "content_html": "<p>RapidFanPost began as a small notebook where I wrote down ordinary things I didn't want to forget.</p><h2>What we write about</h2><p>Everyday life, journeys, memories and short fiction - all written slowly and honestly, for readers anywhere in the world.</p>",
     "updated_at": "2026-10-01T09:00:00+07:00"
   },
   {
@@ -20,7 +20,7 @@
   {
     "slug": "privacy-policy",
     "title": "Privacy Policy",
-    "description": "How DanDan Stories handles reader information.",
+    "description": "How RapidFanPost handles reader information.",
     "order": 3,
     "show_in_menu": false,
     "content_html": "<p>This website does not collect personal information from readers beyond anonymous traffic statistics.</p>",

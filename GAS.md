@@ -1,4 +1,4 @@
-# GAS.md — Quyết định nghiệp vụ CMS DanDan Stories
+# GAS.md — Quyết định nghiệp vụ CMS RapidFanPost
 
 Nguồn chân lý cho mọi file trong `gas/` và `scripts/build.py`. Đọc TOÀN BỘ trước khi sửa code.
 Đổi quyết định nào thì sửa code VÀ file này trong cùng 1 lượt (không để lệch pha).
@@ -123,7 +123,7 @@ Không áp dụng cho dự án này.
 
 ## VIII. Kiến trúc lưu trữ
 
-- Google Sheet "DanDan Stories CMS Data" (tự tạo lần đầu): sheet `Users` — cột `email`, `role`
+- Google Sheet "RapidFanPost CMS Data" (tự tạo lần đầu): sheet `Users` — cột `email`, `role`
   (`admin` | `editor` | `root`).
 - GitHub (Contents API) — đường dẫn cố định, đổi thì sửa luôn `scripts/build.py` +
   `.github/workflows/build.yml`:

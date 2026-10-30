@@ -243,7 +243,7 @@ call("savePage", edToken, { isNew: true, title: "Liên hệ", content_html: "<p>
 
 // 6. Cài đặt website (admin/root).
 throws("saveWebsite", /https:\/\//, token, { site_name: "DanDan", domain_url: "dandan.com" });
-const w = call("saveWebsite", token, { site_name: "DanDan Stories", domain_url: "https://rapidfanpost.com", ga_id: "G-ABC123", ads_txt: "google.com, pub-1, DIRECT" });
+const w = call("saveWebsite", token, { site_name: "RapidFanPost", domain_url: "https://rapidfanpost.com", ga_id: "G-ABC123", ads_txt: "google.com, pub-1, DIRECT" });
 assert.equal(w.domain_url, "https://rapidfanpost.com/");
 call("uploadSiteImage", token, "logo", img("png"));
 const w2 = call("uploadSiteImage", token, "logo", img("webp"));

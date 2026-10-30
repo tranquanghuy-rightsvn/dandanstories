@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build site tinh DanDan Stories tu data/ + templates/ + static/ (chi dung Python stdlib).
+Build site tinh RapidFanPost tu data/ + templates/ + static/ (chi dung Python stdlib).
 
 Giao dien = giao dien TrithucWorld (templates/*.html scaffold 1 lan tu trithucworld/remake/templates,
 giu nguyen HTML/CSS/JS inline, chi doi chu sang tieng Anh + placeholder {{TOKEN}}). Sua giao dien
@@ -44,12 +44,12 @@ POSTS_PER_PAGE = 12
 RESERVED_SLUGS = {"images", "assets", "vendor", "admin", "search", "page", "feed", "sitemap", "404"}
 
 DEFAULT_WEBSITE = {
-    "site_name": "DanDan Stories",
+    "site_name": "RapidFanPost",
     "tagline": "Small stories that stay with you.",
-    "description": "DanDan Stories - everyday stories, memories, journeys and short fiction, told slowly and honestly.",
+    "description": "RapidFanPost - everyday stories, memories, journeys and short fiction, told slowly and honestly.",
     "domain_url": "https://rapidfanpost.com/",
     "lang": "en",
-    "author_default": "DanDan",
+    "author_default": "RapidFanPost",
     "footer_about": "A quiet corner of the internet for telling and reading everyday stories - slow, honest and warm.",
     "contact_email": "",
     "contact_phone": "",
@@ -882,7 +882,7 @@ def check_slugs(categories, posts, pages):
 
 def main():
     global OUT
-    parser = argparse.ArgumentParser(description="Build site tinh DanDan Stories")
+    parser = argparse.ArgumentParser(description="Build site tinh RapidFanPost")
     parser.add_argument("--demo", action="store_true", help="du lieu mau demo/ -> html-demo/ (khong dung html/ that)")
     args = parser.parse_args()
 

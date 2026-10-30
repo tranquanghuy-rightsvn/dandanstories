@@ -1,4 +1,4 @@
-name: Build HTML DanDan Stories
+name: Build HTML RapidFanPost
 
 # Sinh html/ tu data/ + templates/ + static/ roi COMMIT NGUOC vao repo. KHONG deploy o day:
 # Cloudflare (Workers Builds, ket noi thang repo) tu deploy khi thay html/ doi - khong can

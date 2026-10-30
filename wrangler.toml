@@ -1,4 +1,4 @@
-# Cloudflare Worker (chi Static Assets, khong co Worker script) cho DanDan Stories.
+# Cloudflare Worker (chi Static Assets, khong co Worker script) cho RapidFanPost.
 # html/ do GitHub Actions build + commit vao repo; Cloudflare Workers Builds (ket noi thang repo)
 # chi deploy thu muc do (KHONG can build command) - xem README.md muc 2.
 # Ten Worker tren dashboard PHAI trung `name` duoi day, neu khong lan build se loi.

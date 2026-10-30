@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <meta name="referrer" content="no-referrer">
-<title>Hướng dẫn API cho AI - DanDan Stories</title>
+<title>Hướng dẫn API cho AI - RapidFanPost</title>
 <link rel="icon" href="/assets/favicon.svg">
 <!-- Trang hướng dẫn API (GAS.md mục XI) - build.py sinh ra từ templates/admin-api.html.
      Đây là TÀI LIỆU DUY NHẤT cho công cụ AI: đổi action/field trong gas/Api.js thì sửa luôn trang này.
@@ -50,7 +50,7 @@
 <header class="top">
   <div class="wrap">
     <div>
-      <h1><span>DanDan Stories</span> — Hướng dẫn API cho AI</h1>
+      <h1><span>RapidFanPost</span> — Hướng dẫn API cho AI</h1>
       <p>Tài liệu để công cụ AI (Claude, ChatGPT...) tự đăng nội dung lên website. Trang không hiển thị với độc giả.</p>
     </div>
     <div class="spacer"></div>
@@ -77,7 +77,7 @@
   <main>
     <section class="card" id="tom-tat">
       <h2>0. Tóm tắt cho AI (đọc phần này trước)</h2>
-      <pre>WEBSITE:   https://rapidfanpost.com/   (DanDan Stories - English-language story blog for a worldwide audience)
+      <pre>WEBSITE:   https://rapidfanpost.com/   (RapidFanPost - English-language story blog for a worldwide audience)
 API URL:   https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJT4bPMQGgtiScO30iVE3gFoYdee9rsEx2uxwZlWQ/exec
 AUTH:      every request carries "key" (connection key given to you by the site owner; starts with "dds_")
 WRITE:     POST JSON body {"key": "...", "action": "...", ...fields}   (curl: always use -L)
@@ -269,7 +269,7 @@ curl -sL "https://script.google.com/macros/s/AKfycbxyzZ9Cfnb0BC3MbsdpGvufPM5friJ
     <section class="card" id="prompt">
       <h2>11. Lệnh dán cho AI</h2>
       <p>Trong trang quản trị, mục <strong>Kết nối AI</strong> có nút <strong>Chép lệnh cho AI</strong> (đã điền sẵn khoá). Nội dung tương tự:</p>
-      <pre data-tpl>Bạn được phép đăng nội dung lên website DanDan Stories (https://rapidfanpost.com/) qua API JSON.
+      <pre data-tpl>Bạn được phép đăng nội dung lên website RapidFanPost (https://rapidfanpost.com/) qua API JSON.
 
 BƯỚC 1 - ĐỌC TOÀN BỘ hướng dẫn API tại: https://rapidfanpost.com/admin/api/
          Làm đúng theo hướng dẫn đó (cách gọi, field, quy tắc nội dung, quy trình).

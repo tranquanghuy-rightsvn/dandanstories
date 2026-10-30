@@ -1,4 +1,4 @@
-# DanDan Stories
+# RapidFanPost
 
 Website kể chuyện (blog tĩnh) + trang quản trị CMS, chi phí vận hành ~0đ.
 Kiến trúc theo playbook `free-cms-static-site-pipeline` (giống dự án TrithucWorld, phần CMS theo
@@ -60,7 +60,7 @@ node scripts/test_gas_e2e.mjs       # chạy trọn luồng server CMS trên d�
 1. Tạo repo (private hoặc public) — ví dụ `dandanstories`, nhánh `main`.
 2. Đẩy code lên:
    ```bash
-   git init -b main && git add . && git commit -m "Khởi tạo DanDan Stories"
+   git init -b main && git add . && git commit -m "Khởi tạo RapidFanPost"
    git remote add origin git@github.com:<owner>/dandanstories.git && git push -u origin main
    ```
    (`gas/` nằm trong `.gitignore`; `html/` ĐƯỢC commit - do GitHub Actions sinh ra.)
@@ -72,7 +72,7 @@ node scripts/test_gas_e2e.mjs       # chạy trọn luồng server CMS trên d�
 **GitHub Actions** (`.github/workflows/build.yml`) - không cần secret nào:
 - Chạy khi 1 trong 4 file chốt `data/{posts,pages,categories,website}.json` đổi, hoặc khi đổi
   `templates/`, `static/` (trừ `static/images/`), `scripts/build.py`. Chạy tay: tab Actions ›
-  *Build HTML DanDan Stories* › Run workflow.
+  *Build HTML RapidFanPost* › Run workflow.
 - Build `html/` rồi commit `CI: build html from data` vào repo. Repo › Settings › Actions ›
   General › Workflow permissions phải là **Read and write** (workflow đã khai `contents: write`,
   nhưng org/repo đặt chế độ read-only thì vẫn bị chặn).
@@ -93,7 +93,7 @@ node scripts/test_gas_e2e.mjs       # chạy trọn luồng server CMS trên d�
 ### 3. CMS (Google Apps Script)
 
 1. `npm i -g @google/clasp && clasp login`
-2. Trong thư mục dự án: `clasp create --type webapp --title "DanDan Stories CMS" --rootDir gas`
+2. Trong thư mục dự án: `clasp create --type webapp --title "RapidFanPost CMS" --rootDir gas`
    (lệnh này tạo `.clasp.json` — đã gitignore).
 3. `clasp push`
 4. Mở editor (`clasp open`) › Project Settings › Script Properties, điền:
